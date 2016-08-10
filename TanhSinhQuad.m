@@ -4,7 +4,7 @@ function val = TanhSinhQuad(a, b, tol)
 % Parameters
 eta = 1;
 kappa = 1e-15;
-nmax = 100;
+nmax = 200;
 maxlev = 5;
 
 load myFunc.mat f

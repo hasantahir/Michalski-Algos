@@ -11,8 +11,7 @@
 
 
 % Define limits
-a = 0;
-b = 10;
+a = 1;
 
 % Create function handle
 Func(); 
@@ -22,4 +21,4 @@ Func();
 tol =1e-15;
 
 % Call the tanh-sinh quadrature routine
-Sum = TanhSinhQuad(a, b, tol)
+Sum = MixedQuad(a, tol)
