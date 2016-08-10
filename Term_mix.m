@@ -5,6 +5,6 @@ function t = Term_mix(a,ekh)
 % Load the function
 load myFunc_mix.mat f
 delta = exp(-ekh)/ekh;
-w = ( 1 + ekh) * delta
+w = ( 1 + ekh) * delta;
 t = w * f(a,delta);
 end
