@@ -3,8 +3,9 @@ function val = MixedQuad(a, tol)
 
 % Parameters
 kappa = 1e-15;
-nmax = 24;
-maxlev = 5;
+% Tweak these numbers according to the application
+nmax = 200;
+maxlev = 12;
 
 load myFunc_mix.mat f
 

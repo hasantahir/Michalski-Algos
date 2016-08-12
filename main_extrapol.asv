@@ -1,0 +1,28 @@
+clear all
+k=10;
+% v=1;
+% for j=1:2*k+1
+%     y(j)=v/j; 
+%     v=-v;
+% end
+
+% Example from reference paper
+jmax = 50;
+for j = 1 : jmax
+    y(j) = (-1)^(j-1)/(sqrt(j-1+1));
+end
+
+% Example 2
+jmaz = 50;
+for j = 1 : max
+    y(j) = (
+S=cumsum(y);
+tic
+[Er,E2] = EpsilonAlgorithm(S,k);
+toc
+tic
+[W,e] = EpsilonAlgorithmLowStorage(S,k);
+toc
+tic
+E1 = ShanksWynn(k,S);
+toc

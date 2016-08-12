@@ -11,7 +11,7 @@
 
 
 % Define limits
-a = 1 + eps;
+a = 0;
 
 % Create function handle
 Func(); 
@@ -20,5 +20,5 @@ Func();
 % Define tolerance
 tol =1e-15;
 
-% Call the tanh-sinh quadrature routine
+% Call the mixed quadrature routine
 Sum = MixedQuad(a, tol)

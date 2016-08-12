@@ -12,12 +12,19 @@ function Func()
 % f = @(c,d) besselj(0,p*(c+d)).*(c+d)./sqrt(1 - (c+d).^2);
 
 % % Example 3 - taken from the paper
-p = .011;
-f = @(c,d) exp(-sqrt((c+d).^2-1)*p)./sqrt((c+d).^2 -1).*(c+d);
+% p = .011;
+% f = @(c,d) exp(-sqrt((c+d).^2-1)*p)./sqrt((c+d).^2 -1).*(c+d);
+
 
 % Example 4 - taken from http://keisan.casio.com/exec/system/1285343955
 % f =@(c,d) sqrt((c+d).^2 - 1);
 
+% Example 5 - Numerical Recipes pg 217
+p = 1;
+f = @(c,d) besselj(0,p*(c+d)).*(c+d)./(1 + (c+d).^2);
+% f = @(x) besselj(0,(x)).*(x)./(1 + (x).^2);
+
+save myFunc.mat f
 save myFunc_mix.mat f
 % To reuse it in other functions, load the mat file there
 end
