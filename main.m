@@ -11,8 +11,8 @@
 
 
 % Define limits
-a = 0;
-b = 10;
+a = 10;
+b = 100;
 
 % Create function handle
 Func(); 

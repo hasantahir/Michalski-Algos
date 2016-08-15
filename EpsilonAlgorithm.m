@@ -7,7 +7,7 @@ function [Er,E]=EpsilonAlgorithm(x,k)
 % in E, while Er is a reduced version of E, containing only the
 % relevant columns (every second column).
 n=2*k+1;
-E=zeros(n+1,n+1); % Size increased by 1 to avoid array access errors
+E=zeros(n+1); % Size increased by 1 to avoid array access errors
 for i=1:n
     E(i+1,2)=x(i); % Second column has x in it
 end
