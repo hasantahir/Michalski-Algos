@@ -1,22 +1,20 @@
-function val = MixedQuad(a, tol)
+function old = MixedQuad(a, tol)
 % This function 
 
 % Parameters
 kappa = 1e-15;
 % Tweak these numbers according to the application
-nmax = 24;
-maxlev = 5;
+nmax = 61;
+maxlev = 9;
 
-load myFunc_mix.mat f
 
 % 
-m = 0;
-h = 1;
+h = .5;
 eh = exp(h);
 delta = exp(-1);
 w = 2 * delta;
-% s = w * f(a,delta);
-s = w * f(a);
+s = w * funct_mix(a,delta);
+
 [n1,s] = TruncIndex_mix(a,eh, kappa, nmax, s);
 [n2,s] = TruncIndex_mix(a,1/eh, kappa, nmax, s);
 old = h * s;
@@ -28,6 +26,7 @@ for m  = 1 : maxlev
     s2 =  PartSum_mix(a,1/eh, 1/e2h, n2);
     val = old/2 + h * (s1 + s2);
     if abs(val - old ) < (tol * abs(val))
+        disp('Converged');
         break;
     end
     old = val;

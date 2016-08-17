@@ -1,13 +1,13 @@
 function y = funct(c,d)
 % This function implements integrand of I_1(\rho)
-% global init
+
+% Courtesy of Mazin M Mustafa
+
 x = c+d;
-% Singularity = 1;
-% if init < Singularity
+
     if d >= 0
         y = ((1+x)^-0.5)*((1-x)^-0.5);
-    end
-    if d < 0
+    else
         y = ((1+x)^-0.5)*((-d)^-0.5);
     end
 % else

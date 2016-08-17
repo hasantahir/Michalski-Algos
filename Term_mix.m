@@ -3,9 +3,8 @@ function t = Term_mix(a,ekh)
 % main reference
 
 % Load the function
-load myFunc_mix.mat f
 delta = exp(-ekh)/ekh;
 w = ( 1 + ekh) * delta;
-% t = w * f(a,delta);
-t = w * f(a);
+t = w * funct_mix(a,delta);
+
 end

@@ -11,11 +11,7 @@
 
 
 % Define limits
-a = .001;
-
-% Create function handle
-Func(); 
-
+a = 0;
 
 % Define tolerance
 tol =1e-15;

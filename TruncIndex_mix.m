@@ -6,6 +6,7 @@ for n = 1 : nmax
     t = Term_mix(a,ekh);
     s = s + t;
     if abs(t) <= (kappa * abs(s))
+        disp('Converged');
         break;
     end
     ekh = ekh * eh;

@@ -14,10 +14,6 @@
 a = 0;
 b =1;
 
-% Create function handle
-% f= Func(); 
-
-
 % Define tolerance
 tol =1e-15;
 
