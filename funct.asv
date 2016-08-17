@@ -1,0 +1,23 @@
+function y = funct(c,d)
+% This function implements integrand of I_1(\rho)
+global init
+x = c+d;
+% Singularity = 1;
+% if init < Singularity
+    if d >= 0
+        y = ((1+x)^-0.5)*((1-x)^-0.5);
+    end
+    if d < 0
+        y = ((1+x)^-0.5)*((-d)^-0.5);
+    end
+else
+    if d <= 0
+        y = ((1+x)^-0.5)*((1-x)^-0.5);
+    end
+    if d > 0
+        y = (1/sqrt(-1))*((1+x)^-0.5)*((d)^-0.5);
+    end
+end
+p = pi/2;
+y = besselj(0,p*x)*x*y;
+end

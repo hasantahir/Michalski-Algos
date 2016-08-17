@@ -6,9 +6,7 @@ clear all;close all
 z = 1; % Second argument of the integral function
 rho = 7.5; %Thirf argument of the integral function
 q = pi/rho;
-zeta = z;
 nu = 0;
-alpha = 1/2 - nu;
 kmax = 10;
 tol = 1e-15;
 
@@ -18,7 +16,8 @@ load myFunc.mat f
 a = 3.247; % Frist argument of the integral function
 %% Initialize
 X = zeros(1, kmax+2);
-R = zeros(1, kmax+2);
+A = zeros(1, kmax+2);
+B = zeros(1, kmax+2);
 mu = 2;
 X(1) = a;
 s = 0;
@@ -33,8 +32,8 @@ for k = 1 : kmax + 1
         u = TanhSinhQuad(X(k-1), X(k), tol);
     end
     s = s + u;
-    omega = Omega(k ,q, zeta , alpha, X);
-    [val,R] = MosigMichalski(mu, k, s, omega, X, R);
+    omega = u;
+    [val,A, B] = LevinSidi(k,s, omega, X, A, B);
     if (k > 1 && abs(val - old) < tol*abs(val))
         break
     end

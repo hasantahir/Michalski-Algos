@@ -11,11 +11,11 @@
 
 
 % Define limits
-a = 10;
-b = 100;
+a = 0;
+b =1;
 
 % Create function handle
-Func(); 
+% f= Func(); 
 
 
 % Define tolerance
