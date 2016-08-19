@@ -4,12 +4,12 @@ function old = MixedQuad(a, tol)
 % Parameters
 kappa = 1e-15;
 % Tweak these numbers according to the application
-nmax = 61;
-maxlev = 9;
+nmax = 57;
+maxlev = 2;
 
 
 % 
-h = .5;
+h = 1;
 eh = exp(h);
 delta = exp(-1);
 w = 2 * delta;

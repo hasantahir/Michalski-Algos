@@ -6,7 +6,7 @@ for n = 1 : nmax
     t = Term(a,b,ekh, eta); % Summation
     s = s + t; % Add first term and the summation
     if abs(t) <= (kappa * abs(s))
-        disp('Converged');
+%         disp('Converged');
         break;
     end
     ekh = ekh * eh; %k*h = h*(k+1) 

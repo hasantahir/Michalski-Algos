@@ -27,7 +27,7 @@ for m  = 1 : maxlev
     s =  PartSum(a,b,eh, e2h, n, eta);
     val = old/2 + sigma * h * s;
     if abs(val - old ) < (tol * abs(val))
-        disp('Converged');
+%         disp('Converged');
         break;
     end
     old = val;
