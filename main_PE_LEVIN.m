@@ -33,13 +33,21 @@ p = linspace(0, 3, 60);
 
 for i = 1 : length(p)
     a(i) = FindFirstZero(); % Find zeros of Bessel functions
-    q = pi/abs(p(i) + tau); % This increment is very important, most of the times q = pi works
-    %     q = pi; % This works for z = .01 case
+    if p(i) == tau
+        q = pi;
+    else
+        q = pi/abs(p(i) + tau); % This increment is very important, most of the times q = pi works
+    end
     l = 0; % deactivate lucas transformation
     val_1(i) = TanhSinhQuad(0, a(i), tol); % Integrate upto a through DE
     l = 1; % set lucas transformation flag to J_plus
     val_2(i) = PE_Levin(a(i), tol, q); % Tail through PE Levin with Lucas
     l = 2; % set lucas transformation flag to J_minus
+    if p(i) == tau
+        q = pi;
+    else
+        q = pi/abs(p(i) - tau); % This increment is very important, most of the times q = pi works
+    end
     val_3(i) = PE_Levin(a(i), tol, q); % Tail through PE Levin with Lucas
     val(i) = val_1(i) + val_2(i) + val_3(i);
 end

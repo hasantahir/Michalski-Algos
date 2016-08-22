@@ -13,7 +13,7 @@ sigma = (b-a)/2;
 gamma = (b+a)/2;
 
 
-h = 1; % This is actually hit-and-trial
+h = .5; % This is actually hit-and-trial
 eh = exp(h);
 
 
