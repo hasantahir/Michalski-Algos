@@ -16,6 +16,9 @@ for i=1:N
     x2=xmin+i*dx;
     y2=f(x2);
     if (y1*y2<=0)                              % Rolle's theorem : one zeros (or more) present
-        z=[z,fsolve(f,(x2*y1-x1*y2)/(y1-y2))]; % Linear approximation to guess the initial value in the [x1,x2] range.
+        % Added option to suppress output of fsolve
+        options = optimoptions('fsolve','Display','none');
+        z=[z,fsolve(f,(x2*y1-x1*y2)/(y1-y2),options)]; % Linear approximation to guess the initial value in the [x1,x2] range.
+        
     end
 end

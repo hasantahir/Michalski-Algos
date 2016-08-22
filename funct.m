@@ -1,6 +1,9 @@
 function y = funct(c,d)
 % This function implements integrand of I_1(\rho)
 
+%% For sweep, uncomment these global variables
+global z i p l
+
 % Courtesy of Mazin M Mustafa
 
 x = c+d;
@@ -23,11 +26,36 @@ end
 % p = pi/2;
 % p = 53*pi/2;
 % y = besselj(0,p*x)*x*y;
-% Examples from
-y = x/(1+x^2)*besselj(0,x);
-y = x^2*besselj(0,x);
-y = 1/2*log(x^2 + 1)*besselj(1,x);
-y = (1-exp(-x))/(x*log(1 + sqrt(2)))*besselj(0,x);
+% % Examples from
+% y = x/(1+x^2)*besselj(0,x);
+% y = x^2*besselj(0,x);
+% y = 1/2*log(x^2 + 1)*besselj(1,x);
+% y = (1-exp(-x))/(x*log(1 + sqrt(2)))*besselj(0,x);
+
+% from reference paper [1] eq. 80
+
+% For figure 7a
+% p = 0;
+% t = 1;
+% y = exp(-x*z(i))*besselj(0,p*x)*besselj(3/2,x*t);
+
+%% Reuse this part in FindFirstZeros.m
+% For figure 7b
+t = 1;
+% Lucas Decomposition
+J_plus = 1/2*(besselj(0,p(i)*x)*besselj(3/2,x*t) - ...
+    bessely(0,p(i)*x)*bessely(3/2,x*t));
+J_minus = 1/2*(besselj(0,p(i)*x)*besselj(3/2,x*t) + ...
+    bessely(0,p(i)*x)*bessely(3/2,x*t));
+J = besselj(0,p(i)*x)*besselj(3/2,x*t);
+if l == 1
+    y = exp(-x*z)*J_plus*x^.5;
+elseif l == 2
+    y = exp(-x*z)*J_minus*x^.5;
+else
+    y = exp(-x*z)*J*x^.5;
+    
+end
 end
 
 % % Bessel Function reference
