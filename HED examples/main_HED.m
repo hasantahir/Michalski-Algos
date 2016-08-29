@@ -7,7 +7,6 @@ num = 200; %Size of the arrays
 %% Global Parameters
 global i % index number of the distance array
 global p % distance
-global sing % flag for switching type of two-argument routine
 global a % Breakpoint location
 global nu % Switch for TE/TM case (alpha = 0 -> TE, else -> TM)
 global h
@@ -50,13 +49,15 @@ for i = 1 : length(p)
     if nu == 0 % TE case
         
         h = 1;
-        val_1(i) = 0;%TanhSinhQuad(0, k1 + .01i, tol); % Integrate upto k through DE
-        val_2(i) = 0;%TanhSinhQuad(k1 + .01i, a, tol); % Integrate k upto a through DE
+        val_1(i) = TanhSinhQuad(0, k1 + .001i, tol); % Integrate upto k through DE
+        val_2(i) = TanhSinhQuad(k1 + .001i, a, tol); % Integrate k upto a through DE
+        h = 1;
         val_3(i) = PE_Levin(a, tol, q); % Tail through PE Levin with Lucas
     else
         h = 1;
-        val_1(i) = 0;%TanhSinhQuad(0 + 0.01*1i, a, tol); % Integrate upto k through DE
-        val_2(i) = 0; %TanhSinhQuad(k1, a, tol); % Integrate k upto a through DE
+        val_1(i) = TanhSinhQuad(0, a, tol); % Integrate upto k through DE
+        val_2(i) = 0;%TanhSinhQuad(k1, a, tol); % Integrate k upto a through DE
+        h = 1;
         val_3(i) = PE_Levin(a, tol, q); % Tail through PE Levin with Lucas
     end
     
@@ -80,8 +81,8 @@ loglog(p*k1, abs(val_2/k1), 's', 'markersize',4);
 loglog(p*k1, abs(val_3/k1), 's', 'markersize',4);
 xlabel('$k_1\rho$','interpreter','latex')
 ylabel('$I(z, \rho, \tau)$','interpreter','latex')
-% legend([h1 h2 h3],{'DE Rule 0 to k', 'DE Rule k to a', 'PE Rule'},...
-%     'location','northwest');
+legend([h1 h2 h3],{'DE Rule 0 to k', 'DE Rule k to a', 'PE Rule'},...
+     'location','northwest');
 if nu == 0
     title('TE case');
 else

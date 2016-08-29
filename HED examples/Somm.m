@@ -4,7 +4,6 @@ function y = Somm(c,d)
 %% Global Parameters
 global i % index number of the distance array
 global p % distance
-global sing % flag for switching type of two-argument routine
 global nu % Switch for TE/TM case (alpha = 0 -> TE, else -> TM)
 
 % Courtesy of Mazin M Mustafa
