@@ -19,8 +19,7 @@ G_2 = @(kp) k1 ./ (kp .* (gamma_1e(kp) - gamma_1h(kp)));
 S_0 = @(kp) G_1(kp) .* besselj(0, kp * 1e1) .* kp;
 S_1 = @(kp) G_2(kp) .* besselj(1, kp * 1e1) .* kp;
 
-% [X, Y] = meshgrid(0:0.008:2,   -.01:0.005:.01);
-[X, Y] = meshgrid(200:.01:220,   -5:.01:5);
+[X, Y] = meshgrid(0:0.008:.5,   -.01:0.005:.01);
 z = X + 1i*Y;
 
 % Sommerfeld Integral kernels
@@ -28,10 +27,10 @@ f_0 = G_2(z);
 f_1 = S_1(z);
 
 % Surface plot
-surf(X,Y,abs(f_0),'LineStyle', 'none', 'FaceColor', 'interp');   
+surf(X,Y,imag(f_0),'LineStyle', 'none', 'FaceColor', 'interp');   
 
 % Set z-axis to logscale
-set(gca,'Xscale','Lin','Yscale','Lin','Zscale','Log')
+% set(gca,'Xscale','Lin','Yscale','Lin','Zscale','Log')
 
 % Use Brewermap color schemes
 colormap(brewermap([],'RdYlBu'))

@@ -3,14 +3,14 @@
 clear all; close all
 
 tol = 1e-15; % tolerance of the routine
-num = 60; %Size of the arrays
+num = 200; %Size of the arrays
 %% Global Parameters
 global i % index number of the distance array
 global p % distance
 global sing % flag for switching type of two-argument routine
 global a % Breakpoint location
-global alpha % Switch for TE/TM case (alpha = 0 -> TE, else -> TM)
-
+global nu % Switch for TE/TM case (alpha = 0 -> TE, else -> TM)
+global h
 f = 10e9;
 omega = 2*pi*f;
 ep1 = 1;
@@ -20,95 +20,115 @@ ep0 = 8.854e-12;
 
 k1 = omega*sqrt(mu0*ep0*ep1);
 k2 = omega*sqrt(mu0*ep0*ep2);
-nu = 0; % order of the Bessel function
+
+load besselzeros.mat First_15_zeros_J0 First_15_zeros_J1
 
 a = 2*k1; % Set breakpoint
 p = linspace(1e-3/k1,1e1/k1, num); % Define distance array
-q = pi; % Discretizatin
 
-alpha = 0; % TE case
-% alpha = 1; % TM case
+% TE case
+nu = 0;
+
+
+% TM case
+% nu = 1;
+
+
+% Define bessel functions
+S_0 = @(kp) besselj(0, kp * p(i));
+S_1 = @(kp) besselj(1, kp * p(i));
+
+
 
 for i = 1 : length(p)
-    q = pi/(p(i) + 1);
-    
+    if nu == 0
+        q = First_15_zeros_J0/p(i);
+    else
+        q = First_15_zeros_J1/p(i);
+    end
     % Avoid branch points
-    if alpha == 0 % TE case
-        sing = 0;
-        val_1(i) = TanhSinhQuad(0, k1 + .01i, tol); % Integrate upto k through DE
-        sing = 1;
-        val_2(i) = TanhSinhQuad(k1 + .01i, a, tol); % Integrate k upto a through DE
+    if nu == 0 % TE case
+        
+        h = 1;
+        val_1(i) = 0;%TanhSinhQuad(0, k1 + .01i, tol); % Integrate upto k through DE
+        val_2(i) = 0;%TanhSinhQuad(k1 + .01i, a, tol); % Integrate k upto a through DE
         val_3(i) = PE_Levin(a, tol, q); % Tail through PE Levin with Lucas
     else
-        sing = 0;
-        val_1(i) = TanhSinhQuad(0 + .01i, k1, tol); % Integrate upto k through DE
-        val_2(i) = TanhSinhQuad(k1, a, tol); % Integrate k upto a through DE
-        val_3(i) = PE_Levin(0, tol, q); % Tail through PE Levin with Lucas
+        h = 1;
+        val_1(i) = 0;%TanhSinhQuad(0 + 0.01*1i, a, tol); % Integrate upto k through DE
+        val_2(i) = 0; %TanhSinhQuad(k1, a, tol); % Integrate k upto a through DE
+        val_3(i) = PE_Levin(a, tol, q); % Tail through PE Levin with Lucas
     end
     
     val(i) = val_1(i) + val_2(i) + val_3(i);
 end
 
-
+clf
 % Individual Contribution
-% figure (1)
-% 
-% N = 4; % Number of colors to be used
-% % Use Brewer-map color scheme
-% axes('ColorOrder',brewermap(N,'Set1'),'NextPlot','replacechildren')
-% h1 = loglog(p*k1, abs(val_1/k1), 'linewidth',1.4);
-% hold on
-% h2 = loglog(p*k1, abs(val_2/k1), 'linewidth',1.4);
-% h3 = loglog(p*k1, abs(val_3/k1), 'linewidth',1.4);
-% 
-% loglog(p*k1, abs(val_1/k1), 'o', 'markersize',3);
-% loglog(p*k1, abs(val_2/k1), 's', 'markersize',3);
-% loglog(p*k1, abs(val_3/k1), 'x', 'markersize',3);
-% xlabel('$\rho$','interpreter','latex')
-% ylabel('$I(z, \rho, \tau)$','interpreter','latex')
+figure (1)
+
+N = 3; % Number of colors to be used
+% Use Brewer-map color scheme
+axes('ColorOrder',brewermap(N,'Set1'),'NextPlot','replacechildren')
+h1 = loglog(p*k1, abs(val_1/k1), 'linewidth',1.3);
+hold on
+h2 = loglog(p*k1, abs(val_2/k1), 'linewidth',1.3);
+h3 = loglog(p*k1, abs(val_3/k1), 'linewidth',1.3);
+
+loglog(p*k1, abs(val_1/k1), 's', 'markersize',4);
+loglog(p*k1, abs(val_2/k1), 's', 'markersize',4);
+loglog(p*k1, abs(val_3/k1), 's', 'markersize',4);
+xlabel('$k_1\rho$','interpreter','latex')
+ylabel('$I(z, \rho, \tau)$','interpreter','latex')
 % legend([h1 h2 h3],{'DE Rule 0 to k', 'DE Rule k to a', 'PE Rule'},...
 %     'location','northwest');
-% if alpha == 1
-%     title('TE case');
-% else
-%     title('TM case');
-% end
-% hold off
+if nu == 0
+    title('TE case');
+else
+    title('TM case');
+end
+box on
+set(gcf,'color','white');
+hold off
 
 % Tail Contribution
 figure (2)
 N = 2; % Number of colors to be used
 % Use Brewer-map color scheme
 axes('ColorOrder',brewermap(N,'Set1'),'NextPlot','replacechildren')
-h4 = loglog(p*k1, abs(val_3/k1), 'linewidth',1.4);
+h4 = loglog(p*k1, abs(val_3/k1), 'linewidth',1.3);
 hold on
-loglog(p*k1, abs(val_3/k1), 'x', 'markersize',3);
-xlabel('$\rho$','interpreter','latex')
+loglog(p*k1, abs(val_3/k1), 's', 'markersize',4);
+xlabel('$k_1\rho$','interpreter','latex')
 ylabel('$I(z, \rho, \tau)$','interpreter','latex')
-if alpha == 1
+if nu == 0
     title('TE case');
 else
     title('TM case');
 end
+box on
+set(gcf,'color','white');
 hold off
 
 
 % Overall integrals
-% figure(3)
-% 
-% N = 2; % Number of colors to be used
-% % Use Brewer-map color scheme 'Set1'
-% axes('ColorOrder',brewermap(N,'Set1'),'NextPlot','replacechildren')
-% 
-% h5 = loglog(p*k1, abs(val)/k1);
-% hold on
-% loglog(p*k1, abs(val)/k1, 'ko', 'markersize',2);
-% xlabel('$\rho$','interpreter','latex')
-% ylabel('$I(z, \rho, \tau)$','interpreter','latex')
-% 
-% if alpha == 1
-%     title('TE case');
-% else
-%     title('TM case');
-% end
-% hold off
+figure(3)
+
+N = 2; % Number of colors to be used
+% Use Brewer-map color scheme 'Set1'
+axes('ColorOrder',brewermap(N,'Set1'),'NextPlot','replacechildren')
+
+h5 = loglog(p*k1, abs(val)/k1);
+hold on
+loglog(p*k1, abs(val)/k1, 's', 'markersize',4);
+xlabel('$k_1\rho$','interpreter','latex')
+ylabel('$I(z, \rho, \tau)$','interpreter','latex')
+
+if nu == 0
+    title('TE case');
+else
+    title('TM case');
+end
+box on
+set(gcf,'color','white');
+hold off

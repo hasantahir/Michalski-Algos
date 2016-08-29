@@ -8,6 +8,7 @@ function t = Term(a,b,ekh, eta)
 % t is the summation term 
 
 % Load the function
+
 sigma = (b-a)/2;
 q = exp(-eta * (ekh - 1/ekh)); % q = exp( 2 *g(kh))
 delta = 2 * q / (1 + q); % Expressing tanh
