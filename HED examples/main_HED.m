@@ -1,7 +1,7 @@
 % This program computes the Sommerfeld integral for a Horizontal Electric
 % Dipole
 clear all; close all
-
+tic
 tol = 1e-15; % tolerance of the routine
 num = 200; %Size of the arrays
 %% Global Parameters
@@ -26,11 +26,11 @@ a = 2*k1; % Set breakpoint
 p = linspace(1e-3/k1,1e1/k1, num); % Define distance array
 
 % TE case
-nu = 0;
+% nu = 0;
 
 
 % TM case
-% nu = 1;
+nu = 1;
 
 
 % Define bessel functions
@@ -102,14 +102,19 @@ hold on
 loglog(p*k1, abs(val_3/k1), 's', 'markersize',4);
 xlabel('$k_1\rho$','interpreter','latex')
 ylabel('$I(z, \rho, \tau)$','interpreter','latex')
-if nu == 0
-    title('TE case');
-else
-    title('TM case');
-end
+
 box on
 set(gcf,'color','white');
 hold off
+cleanfigure();
+if nu == 0
+    title('TE case');
+    matlab2tikz('filename',sprintf('figures/TE_tail.tex'),'showInfo', false)
+else
+    title('TM case');
+    matlab2tikz('filename',sprintf('figures/TM_tail.tex'),'showInfo', false)
+end
+
 
 
 % Overall integrals
@@ -133,3 +138,4 @@ end
 box on
 set(gcf,'color','white');
 hold off
+toc
