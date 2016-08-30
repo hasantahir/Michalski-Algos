@@ -2,13 +2,12 @@ function old = TanhSinhQuad(a, b, tol)
 % This function is the DE rule designed to run on Horizontal Electric
 % Dipole only
 % For general purpose usage, go to the root folder
-global h
 % Parameters
 eta = 1;
 kappa = 1e-15;
 nmax = 24;
 maxlev = 5;
-
+h = 1;
 
 % Transformation to incorporate any limit other than 0-1
 sigma = (b-a)/2;

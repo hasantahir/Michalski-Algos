@@ -13,8 +13,10 @@ sigma = (b-a)/2;
 gamma = (b+a)/2;
 
 
-h = 1.5; % This is actually hit-and-trial
+h = 1; % This is actually hit-and-trial
 eh = exp(h);
+
+
 
 % First term g'(0)*f(gamma)
 s = eta * funct(gamma,0); % Call function to calculate first term

@@ -14,8 +14,11 @@ B = zeros(1, kmax + 1);
 % end
 X(1) = a;%q(1); % Corresponds to x(-1) in algo
 
-q(1) = q(1) - a;
-diff_q = diff(q);
+% q(1) = q(1) - a;
+% diff_q = diff(q);
+% 
+% % This line only for Sommerfeld Identity
+% q = diff_q(1);
 s = 0; % Initial sum to zero
 % Initial guess
 val = 1;
@@ -26,9 +29,9 @@ val = 1;
 
 for k = 2 : kmax + 2
     if nu == 0
-        X(k) = X(k - 1) + diff_q(k+1);
+        X(k) = X(k - 1) + q;
     else
-        X(k) = X(k - 1) + diff_q(k+1);
+        X(k) = X(k - 1) + q;
     end
     u = TanhSinhQuad(X(k - 1), X(k), tol);
     s = s + u;
