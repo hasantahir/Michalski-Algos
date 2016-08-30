@@ -1,6 +1,7 @@
 % This program computes the Sommerfeld identity
 % exp(-jkr) = 4*pi int_{-\infty}^{\infty} J_0(k_p p) k_p 
 tic
+clear;close all;clf
 tol = 1e-15; % tolerance of the routine
 num = 200; %Size of the arrays
 %% Global Parameters
@@ -8,7 +9,6 @@ global i % index number of the distance array
 global p % distance
 global a % Breakpoint location
 global nu % Switch for TE/TM case (alpha = 0 -> TE, else -> TM)
-global h
 f = 10e9;
 omega = 2*pi*f;
 ep1 = 1;
@@ -23,19 +23,16 @@ load besselzeros.mat First_15_zeros_J0 First_15_zeros_J1
 
 nu = 0;
 a = 2*k1; % Set breakpoint
-p = linspace(1e-2,1e0, 100); % Define distance array
+p = linspace(1e-2,1e2, 200); % Define distance array
 % p = linspace(sqrt(2), sqrt(200), 100);
 for i = 1 : length(p)
-        q = First_15_zeros_J0/p(i);
-        h = 1;
-        val_1(i) = 0;%TanhSinhQuad(0, k1 + .01i, tol); % Integrate upto k through DE
-        h = 1;
-        val_2(i) = 0;%TanhSinhQuad(k1 + .01i, a, tol); % Integrate k upto a through DE
-        h = 1;
-        val_3(i) = TanhSinhQuad(0, q(1), tol); % Integrate k upto a through DE
-        val_4(i) = PE_Levin(q(1), tol, q);
+%         q = First_15_zeros_J0/p(100);
+        q = pi/p(i);
+        val_1(i) = TanhSinhQuad(0, k1 + .01i, tol); % Integrate upto k through DE
+        val_2(i) = TanhSinhQuad(k1 + .01i, a, tol); % Integrate k upto a through DE
+        val_3(i) = PE_Levin(a, tol, q);
         
-        val(i) = val_1(i) + val_2(i) + val_3(i) + val_4(i);
+        val(i) = val_1(i) + val_2(i) + val_3(i);
 end
 
 clf
@@ -45,7 +42,7 @@ figure (1)
 N = 3; % Number of colors to be used
 % Use Brewer-map color scheme
 axes('ColorOrder',brewermap(N,'Set1'),'NextPlot','replacechildren')
-h1 = loglog(p*, abs(val_1), 'linewidth',1.3);
+h1 = loglog(p, abs(val_1), 'linewidth',1.3);
 hold on
 h2 = loglog(p, abs(val_2), 'linewidth',1.3);
 h3 = loglog(p, abs(val_3), 'linewidth',1.3);
@@ -67,26 +64,43 @@ set(gcf,'color','white');
 hold off
 
 
-clf
+
 % Individual Contribution
 figure (2)
-
+f = exp(-1j*k1*p)./(4*pi*p);
 N = 2; % Number of colors to be used
 % Use Brewer-map color scheme
 axes('ColorOrder',brewermap(N,'Set1'),'NextPlot','replacechildren')
 h1 = loglog(p, abs(val), 'linewidth',1.3);
+h2 = loglog(p, abs(f), 'linewidth',1.3);
+hold on
+title('Computed Sommerfeld Identity')
+loglog(p, abs(val), 's', 'markersize',4);
+loglog(p, abs(f), 's', 'markersize',4);
+xlabel('$\rho$','interpreter','latex')
+ylabel('$\mathcal{S}_0 \left\{  \frac{1}{2jk_{z1}} \right\}$','interpreter','latex')
+box on
+legend([h1 h2],{'Numerical', 'Analytical', 'PE Rule'},...
+     'location','northwest');
+set(gcf,'color','white');
+hold off
+toc
+
+
+% Individual Contribution
+figure (3)
+
+N = 2; % Number of colors to be used
+% Use Brewer-map color scheme
+axes('ColorOrder',brewermap(N,'Set1'),'NextPlot','replacechildren')
+h1 = loglog(p, abs(val - f), 'linewidth',1.3);
 hold on
 
-loglog(p, abs(val(1:100)), 's', 'markersize',4);
-xlabel('$k_1\rho$','interpreter','latex')
-ylabel('$I(z, \rho, \tau)$','interpreter','latex')
-% legend([h1 h2 h3],{'DE Rule 0 to k', 'DE Rule k to a', 'PE Rule'},...
-%      'location','northwest');
-if nu == 0
-    title('TE case');
-else
-    title('TM case');
-end
+loglog(p, abs(val - f), 's', 'markersize',4);
+xlabel('$\rho$','interpreter','latex')
+ylabel('$\vert \mathcal{S}_0 \left\{  \frac{1}{2jk_{z1}} \right\} - \frac{e^{jk_1 \rho}}{4 \pi \rho} \vert$',...
+    'interpreter','latex', 'fontsize',11)
+title('Difference between analytical and computed values of Sommerfeld Identity')
 box on
 set(gcf,'color','white');
 hold off
