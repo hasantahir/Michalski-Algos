@@ -16,6 +16,9 @@ X(1) = a;%q(1); % Corresponds to x(-1) in algo
 
 q(1) = q(1) - a;
 diff_q = diff(q);
+% 
+% % This line only for Sommerfeld Identity
+% q = diff_q(1);
 s = 0; % Initial sum to zero
 % Initial guess
 val = 1;

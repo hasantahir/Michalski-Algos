@@ -66,6 +66,6 @@ else
     y = G_2 * besselj(nu, kp * p(i)) * kp; % Green's function for TM case
     
 end
-
+% y = 1/(2i*kz1) * besselj(nu, kp * p(i)) * kp/(2*pi);
 
 end

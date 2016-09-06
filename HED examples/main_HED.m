@@ -50,13 +50,15 @@ for i = 1 : length(p)
         
         h = 1;
         val_1(i) = TanhSinhQuad(0, k1 + .001i, tol); % Integrate upto k through DE
+        h = 1;
         val_2(i) = TanhSinhQuad(k1 + .001i, a, tol); % Integrate k upto a through DE
         h = 1;
         val_3(i) = PE_Levin(a, tol, q); % Tail through PE Levin with Lucas
     else
         h = 1;
-        val_1(i) = TanhSinhQuad(0, a, tol); % Integrate upto k through DE
-        val_2(i) = 0;%TanhSinhQuad(k1, a, tol); % Integrate k upto a through DE
+        val_1(i) = TanhSinhQuad(.001i, k1, tol); % Integrate upto k through DE
+        h = 1;
+        val_2(i) = TanhSinhQuad(k1, a, tol); % Integrate k upto a through DE
         h = 1;
         val_3(i) = PE_Levin(a, tol, q); % Tail through PE Levin with Lucas
     end
@@ -122,9 +124,9 @@ figure(3)
 
 N = 2; % Number of colors to be used
 % Use Brewer-map color scheme 'Set1'
-axes('ColorOrder',brewermap(N,'Set1'),'NextPlot','replacechildren')
+axes('ColorOrder',brewermap(N,'set1'),'NextPlot','replacechildren')
 
-h5 = loglog(p*k1, abs(val)/k1);
+h5 = loglog(p*k1, abs(val)/k1, 'linewidth',1.3);
 hold on
 loglog(p*k1, abs(val)/k1, 's', 'markersize',4);
 xlabel('$k_1\rho$','interpreter','latex')

@@ -22,8 +22,8 @@ S_1 = @(kp) G_1(kp) .* besselj(0, kp * 1e1) .* kp;
 S_2 = @(kp) G_2(kp) .* besselj(1, kp * 1e1) .* kp;
 
 % Bessel Function
-J_1 = @(kp) besselj(0, kp * 1e1) .* kp;
-J_2 = @(kp) besselj(1, kp * 1e1) .* kp;
+J_0 = @(kp) besselj(0, kp * 1e1) .* kp;
+J_1 = @(kp) besselj(1, kp * 1e1) .* kp;
 
 % Bessel Function
 [X, Y] = meshgrid(linspace(0,2,500),   linspace(0,1,500));
@@ -31,46 +31,73 @@ J_2 = @(kp) besselj(1, kp * 1e1) .* kp;
 % [X, Y] = meshgrid(0:0.008:2,   -1:0.005:1);
 
 % For Spectral Greens function
-% [X, Y] = meshgrid(linspace(205,215,500), linspace(0,.1,300));
+% [X, Y] = meshgrid(linspace(208,212,500), linspace(0,.5,500));
+% X = single(X);
+% Y = single(Y);
 z = X + 1i*Y;
 
 % Sommerfeld Integral kernels
 f_0 = kz1(z);
 f_1 = kz2(z);
+
 f_2 = gamma_1h(z);
 f_3 = gamma_1e(z);
+
 f_4 = G_1(z);
 f_5 = G_2(z);
+
 f_6 = S_1(z);
 f_7 = S_2(z);
-f_8 = J_1(z);
-f_9 = J_2(z);
+
+f_8 = J_0(z);
+f_9 = J_1(z);
 
 plt = abs(f_9);
+fig = figure;
+%% Surface plot
+h = surf(X,Y,plt,'LineStyle', 'none',...
+    'FaceColor', 'interp');  
+%%
 
-% Surface plot
-surf(X,Y,plt,'LineStyle', 'none', 'FaceColor', 'interp');   
-
+plt_min = min(min(abs(plt)));
+plt_max = max(max(abs(plt)));
+light('Position',[10 0 10],'Style','infinite')
 % Set z-axis to logscale
 set(gca,'Xscale','Lin','Yscale','Log','Zscale','Log')
-% set(gca,'clim',[plt_min plt_max])
 
 % Use Brewermap color schemes
 colormap(brewermap([],'Spectral')) %RdYlGn 'RdYlBu' Spectral
-
 % Create some lighting for nice figures
 camlight left
 camlight right
 camlight('headlight')
 lighting gouraud
-set(gca,...
-    'projection','perspective','box','on')
-grid on
-set(gcf, 'color','white')
-
-
-% Labeling
-xlabel('\Re \rho')
-ylabel('\Im \rho')
-zlabel('$\mathcal{S}_0$', 'interpreter', 'latex')
+material metal
 shading interp
+set(gca,...
+    'box','on',...
+    'FontName','times new roman',...
+    'FontSize',12);
+grid on
+set(gcf, 'color','white');
+view([45 30])
+ylim([1e-2 1])
+% Labeling
+xlabel('$\Re {k_{\rho}}$','interpreter','latex')
+ylabel('$\Im {k_{\rho}}$','interpreter','latex')
+% caxis([abs((plt_min)) .04*abs(log(plt_max))])
+
+
+if plt == abs(f_8)
+%     title('$J_0(z)$', 'interpreter', 'latex');
+%     matlab2tikz('filename',sprintf('figures/J_0_comp.tex'),...
+%         'showInfo', false,'floatFormat','%.3f');
+    print(fig,'-dpng','figures/J_0_comp','-r600')
+elseif plt == abs(f_9)
+%     title('$J_1(z)$', 'interpreter', 'latex');
+%     matlab2tikz('filename',sprintf('figures/J_1_comp.tex'),...
+%         'showInfo', false,'floatFormat','%.3f');
+    print(fig,'-dpng','figures/J_1_comp','-r600')
+elseif plt == abs(f_6)
+    print(fig,'-dpng','figures/S_1_comp','-r600')
+end

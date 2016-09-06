@@ -21,8 +21,13 @@ for k = 2 : kmax + 2
     s = s + u;
     
     % Type of Levin Transformation
+<<<<<<< HEAD
+%     omega = u * (k - 2 + 1); % u- transformation
+        omega = u;      % t- transformation
+=======
     omega = u * (k - 2 + 1); % u- transformation
     %     omega = u;      % t- transformation
+>>>>>>> master
     %     if k > 1
     [val, A, B] = LevinSidi(k, s, omega, X, A, B);
     %     end
