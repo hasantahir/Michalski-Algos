@@ -3,7 +3,7 @@ function val = PE_Levin(a, tol, q)
 % q optimally should be pi/rho.
 %% Initialize
 global nu
-global kmax
+kmax = 12;
 X = zeros(1, kmax + 2);
 A = zeros(1, kmax + 1);
 B = zeros(1, kmax + 1);
@@ -14,8 +14,8 @@ B = zeros(1, kmax + 1);
 % end
 X(1) = a;%q(1); % Corresponds to x(-1) in algo
 
-% q(1) = q(1) - a;
-% diff_q = diff(q);
+q(1) = q(1) - a;
+diff_q = diff(q);
 % 
 % % This line only for Sommerfeld Identity
 % q = diff_q(1);
@@ -29,9 +29,9 @@ val = 1;
 
 for k = 2 : kmax + 2
     if nu == 0
-        X(k) = X(k - 1) + q;
+        X(k) = X(k - 1) + diff_q(k+1);
     else
-        X(k) = X(k - 1) + q;
+        X(k) = X(k - 1) + diff_q(k+1);
     end
     u = TanhSinhQuad(X(k - 1), X(k), tol);
     s = s + u;

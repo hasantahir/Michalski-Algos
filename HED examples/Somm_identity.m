@@ -28,7 +28,7 @@ for i = 1 : length(p)
         if p(i) < 1
             maxlev = 5;
         else
-            maxlev = 15;
+            maxlev = 11;
         end
         val_1(i) = TanhSinhQuad(0, k1 + .001i, tol); % Integrate upto k through DE
         val_2(i) = TanhSinhQuad(k1 + .001i, a, tol); % Integrate k upto a through DE

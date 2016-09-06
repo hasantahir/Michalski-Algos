@@ -49,18 +49,18 @@ for i = 1 : length(p)
     if nu == 0 % TE case
         
         h = 1;
-        val_1(i) = TanhSinhQuad(0, k1 + .1i, tol); % Integrate upto k through DE
+        val_1(i) = TanhSinhQuad(0, k1 + .001i, tol); % Integrate upto k through DE
         h = 1;
-        val_2(i) = TanhSinhQuad(k1 + .1i, a, tol); % Integrate k upto a through DE
+        val_2(i) = TanhSinhQuad(k1 + .001i, a, tol); % Integrate k upto a through DE
         h = 1;
-        val_3(i) = 0;%PE_Levin(a, tol, q); % Tail through PE Levin with Lucas
+        val_3(i) = PE_Levin(a, tol, q); % Tail through PE Levin with Lucas
     else
         h = 1;
-        val_1(i) = TanhSinhQuad(10i, k1 + .1i, tol); % Integrate upto k through DE
+        val_1(i) = TanhSinhQuad(.001i, k1, tol); % Integrate upto k through DE
         h = 1;
-        val_2(i) = TanhSinhQuad(k1 + .1i, a, tol); % Integrate k upto a through DE
+        val_2(i) = TanhSinhQuad(k1, a, tol); % Integrate k upto a through DE
         h = 1;
-        val_3(i) = 0;%PE_Levin(a, tol, q); % Tail through PE Levin with Lucas
+        val_3(i) = PE_Levin(a, tol, q); % Tail through PE Levin with Lucas
     end
     
     val(i) = val_1(i) + val_2(i) + val_3(i);

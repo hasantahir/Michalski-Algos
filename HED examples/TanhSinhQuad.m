@@ -3,11 +3,11 @@ function old = TanhSinhQuad(a, b, tol)
 % Dipole only
 % For general purpose usage, go to the root folder
 % Parameters
-global maxlev
+maxlev = 5;
 eta = 1;
 kappa = 1e-15;
 nmax = 24;
-h = 1;
+global h
 
 % Transformation to incorporate any limit other than 0-1
 sigma = (b-a)/2;

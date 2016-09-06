@@ -59,14 +59,15 @@ loglog(p, abs(val_1), 's', 'markersize',4);
 loglog(p, abs(val_2), 's', 'markersize',4);
 loglog(p, abs(val_3), 's', 'markersize',4);
 xlabel('$k_1\rho$','interpreter','latex')
-ylabel('$I(z, \rho, \tau)$','interpreter','latex')
+ylabel('$\vert \mathcal{S}_0 \left\{  \frac{1}{2jk_{z1}} \right\} - \frac{e^{jk_1 \rho}}{4 \pi \rho} \vert$','interpreter','latex')
 legend([h1 h2 h3],{'DE Rule 0 to k', 'DE Rule k to a', 'PE Rule'},...
-     'location','northwest');
+     'location','northeast');
 box on
 set(gcf,'color','white');
+matlab2tikz('filename',sprintf('figures/Som_Id.tex'),'showInfo', false)
 hold off
 
-
+close all;clf
 % Individual Contribution
 figure (2)
 f = exp(-1j*k1*p)./(4*pi*p);
@@ -88,7 +89,7 @@ set(gcf,'color','white');
 hold off
 toc
 
-
+close all;clf
 % Individual Contribution
 figure (3)
 
@@ -102,8 +103,9 @@ loglog(p, abs(val - f), 's', 'markersize',4);
 xlabel('$\rho$','interpreter','latex')
 ylabel('$\vert \mathcal{S}_0 \left\{  \frac{1}{2jk_{z1}} \right\} - \frac{e^{jk_1 \rho}}{4 \pi \rho} \vert$',...
     'interpreter','latex', 'fontsize',11)
-title('Difference between analytical and computed values of Sommerfeld Identity')
+title('Absolute Error between analytical and computed values')
 box on
 set(gcf,'color','white');
+matlab2tikz('filename',sprintf('figures/Som_Id_error.tex'),'showInfo', false)
 hold off
 toc
