@@ -39,6 +39,7 @@ end
 % t = 1;
 % y = exp(-x*z(i))*besselj(0,p*x)*besselj(3/2,x*t);
 
+<<<<<<< HEAD
 % %% Reuse this part in FindFirstZeros.m
 % % For figure 7b
 % t = 1;
@@ -56,6 +57,26 @@ end
 %     y = exp(-x*z)*J*x^.5;
 %     
 % end
+=======
+%% Reuse this part in FindFirstZeros.m
+% For figure 7b
+t = 1;
+% Lucas Decomposition
+J_plus = 1/2*(besselj(0,p(i)*x)*besselj(3/2,x*t) - ...
+    bessely(0,p(i)*x)*bessely(3/2,x*t));
+J_minus = 1/2*(besselj(0,p(i)*x)*besselj(3/2,x*t) + ...
+    bessely(0,p(i)*x)*bessely(3/2,x*t));
+J = besselj(0,p(i)*x)*besselj(3/2,x*t);
+if l == 1
+    y = exp(-x*z)*J_plus*x^.5;
+elseif l == 2
+    y = exp(-x*z)*J_minus*x^.5;
+else
+    y = exp(-x*z)*J*x^.5;
+    
+end
+end
+>>>>>>> master
 
 
 %% From reference [1], eq 78

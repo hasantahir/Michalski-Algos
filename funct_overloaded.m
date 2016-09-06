@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 function y = funct_overloaded(varargin)
+=======
+function y = funct(varargin)
+>>>>>>> master
 % This function implements integrand of I_1(\rho)
 
 % Courtesy of Mazin M Mustafa

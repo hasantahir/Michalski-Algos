@@ -2,7 +2,7 @@ function val = PE_Levin(a, tol, q)
 
 % q optimally should be pi/rho.
 %% Initialize
-kmax = 10;
+kmax = 51;
 X = zeros(1, kmax + 2);
 A = zeros(1, kmax + 1);
 B = zeros(1, kmax + 1);
@@ -21,8 +21,13 @@ for k = 2 : kmax + 2
     s = s + u;
     
     % Type of Levin Transformation
+<<<<<<< HEAD
 %     omega = u * (k - 2 + 1); % u- transformation
         omega = u;      % t- transformation
+=======
+    omega = u * (k - 2 + 1); % u- transformation
+    %     omega = u;      % t- transformation
+>>>>>>> master
     %     if k > 1
     [val, A, B] = LevinSidi(k, s, omega, X, A, B);
     %     end
