@@ -1,0 +1,67 @@
+% This file was created by matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.89412,0.10196,0.10980}%
+\definecolor{mycolor2}{rgb}{0.21569,0.49412,0.72157}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=4.521in,
+height=3.55in,
+at={(0.758in,0.497in)},
+scale only axis,
+xmin=-1500000,
+xmax=1500000,
+xlabel style={font=\color{white!15!black}},
+xlabel={$\textrm{Real Relative Distance from Branch Point}$},
+ymin=-1000000000,
+ymax=2500000000,
+ylabel style={font=\color{white!15!black}},
+ylabel={$\textrm{Imaginary Relative Distance from Branch Point}$},
+axis background/.style={fill=white},
+title style={font=\bfseries},
+title={Relative TM Pole Locations for thickness d = 1e-06m},
+legend style={legend columns=2, legend cell align=left, align=left, draw=white!15!black}
+]
+\addplot [color=mycolor1, draw=none, mark size=1.4pt, mark=square*, mark options={solid, fill=mycolor1, mycolor1}]
+  table[row sep=crcr]{%
+1036930.78472801	-1570289.87021229\\
+-1162680.15230772	1570289.87021229\\
+1036359.77659071	-4712016.16197937\\
+-1162109.14417042	4712016.16197937\\
+1036271.0767847	-7853740.56955259\\
+-1162020.44436441	7853740.56955259\\
+1036271.0767847	-7853740.56955259\\
+1036244.71544396	-10995398.4449417\\
+-1161994.08302367	10995398.4449417\\
+1036222.57535657	-23561861.4152415\\
+-1161971.94293628	23561861.4152415\\
+1036221.1904127	-26703463.81218\\
+-1161970.55799241	26703463.81218\\
+-1161968.87667062	32986663.0884674\\
+1036219.50909091	-32986663.0884674\\
+1036219.50909091	-32986663.0884674\\
+-1161968.87667062	32986663.0884674\\
+1036216.8473535	-80110588.0032877\\
+-1161966.21493321	80110588.0032877\\
+1036216.77105558	-86393775.1028207\\
+-1161966.13863528	86393775.1028207\\
+1036216.73878445	-89535368.5583522\\
+-1161966.10636416	89535368.5583522\\
+1036216.39352053	-196349530.783254\\
+-1161965.76110024	196349530.783254\\
+1036216.33863011	-312588462.708987\\
+-1161965.70620982	312588462.708987\\
+1036216.31518397	-532499951.071556\\
+-1161965.67124797	2075021946.74348\\
+};
+\addlegendentry{Poles}
+
+\addplot [color=mycolor2, draw=none, mark size=3.5pt, mark=diamond*, mark options={solid, fill=mycolor2, mycolor2}]
+  table[row sep=crcr]{%
+0	0\\
+};
+\addlegendentry{Branch Point}
+
+\end{axis}
+\end{tikzpicture}%

@@ -1,0 +1,52 @@
+% This file was created by matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.89412,0.10196,0.10980}%
+\definecolor{mycolor2}{rgb}{0.21569,0.49412,0.72157}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=4.521in,
+height=3.55in,
+at={(0.758in,0.497in)},
+scale only axis,
+xmin=-200000,
+xmax=100000,
+xlabel style={font=\color{white!15!black}},
+xlabel={$\textrm{Real Relative Distance from Branch Point}$},
+ymin=-4000000,
+ymax=4000000,
+ylabel style={font=\color{white!15!black}},
+ylabel={$\textrm{Imaginary Relative Distance from Branch Point}$},
+axis background/.style={fill=white},
+title style={font=\bfseries},
+title={Relative TE Pole Locations fot thickness d = 8e-05m},
+legend style={at={(0.97,0.03)}, anchor=south east, legend cell align=left, align=left, draw=white!15!black}
+]
+\addplot [color=mycolor1, draw=none, mark size=1.4pt, mark=square*, mark options={solid, fill=mycolor1, mycolor1}]
+  table[row sep=crcr]{%
+-14547.0438905814	-20430.3499531693\\
+-99014.8390429855	20430.3499531693\\
+-15223.9980656529	-72274.2703776092\\
+-98337.884867914	72274.2703776092\\
+-9591.26426377992	-117787.500152886\\
+-103970.618669787	117787.500152886\\
+-170.447575081089	-202281.951176101\\
+-113391.435358486	202281.951176101\\
+33297.2121994633	-879217.650985766\\
+-146859.09513303	879217.650985766\\
+37333.4040207462	-1036854.88328754\\
+-150895.286954313	1036854.88328754\\
+69220.5825810375	-3749007.01341177\\
+-182782.465514604	3749007.01341177\\
+};
+\addlegendentry{Poles}
+
+\addplot [color=mycolor2, draw=none, mark size=3.5pt, mark=diamond*, mark options={solid, fill=mycolor2, mycolor2}]
+  table[row sep=crcr]{%
+0	0\\
+};
+\addlegendentry{Branch Point}
+
+\end{axis}
+\end{tikzpicture}%

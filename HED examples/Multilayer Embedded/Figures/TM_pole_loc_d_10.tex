@@ -1,0 +1,67 @@
+% This file was created by matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.89412,0.10196,0.10980}%
+\definecolor{mycolor2}{rgb}{0.21569,0.49412,0.72157}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=4.521in,
+height=3.55in,
+at={(0.758in,0.497in)},
+scale only axis,
+xmin=24194,
+xmax=1558800,
+xlabel style={font=\color{white!15!black}},
+xlabel={$\Re\textrm{k}_{\rho}$},
+ymin=-1107800000,
+ymax=82845000,
+ylabel style={font=\color{white!15!black}},
+ylabel={$\Im\textrm{k}_{\rho}$},
+axis background/.style={fill=white},
+title style={font=\bfseries},
+title={TM Pole Locations for thickness d = 1e-06m},
+legend style={at={(0.03,0.03)}, anchor=south west, legend columns=2, legend cell align=left, align=left, draw=white!15!black}
+]
+\addplot [color=mycolor1, draw=none, mark size=1.4pt, mark=square*, mark options={solid, fill=mycolor1, mycolor1}]
+  table[row sep=crcr]{%
+1099805.46851787	-1570289.87021229\\
+-1099805.46851787	1570289.87021229\\
+1099234.46038057	-4712016.16197937\\
+-1099234.46038057	4712016.16197937\\
+1099145.76057455	-7853740.56955259\\
+-1099145.76057455	7853740.56955259\\
+1099145.76057455	-7853740.56955259\\
+1099119.39923381	-10995398.4449417\\
+-1099119.39923381	10995398.4449417\\
+1099097.25914642	-23561861.4152415\\
+-1099097.25914642	23561861.4152415\\
+1099095.87420256	-26703463.81218\\
+-1099095.87420256	26703463.81218\\
+-1099094.19288076	32986663.0884674\\
+1099094.19288076	-32986663.0884674\\
+1099094.19288076	-32986663.0884674\\
+-1099094.19288076	32986663.0884674\\
+1099091.53114335	-80110588.0032877\\
+-1099091.53114335	80110588.0032877\\
+1099091.45484543	-86393775.1028207\\
+-1099091.45484543	86393775.1028207\\
+1099091.4225743	-89535368.5583522\\
+-1099091.4225743	89535368.5583522\\
+1099091.07731039	-196349530.783254\\
+-1099091.07731039	196349530.783254\\
+1099091.02241996	-312588462.708987\\
+-1099091.02241996	312588462.708987\\
+1099090.99897382	-532499951.071556\\
+-1099090.98745812	2075021946.74348\\
+};
+\addlegendentry{Poles}
+
+\addplot [color=mycolor2, draw=none, mark size=3.5pt, mark=diamond*, mark options={solid, fill=mycolor2, mycolor2}]
+  table[row sep=crcr]{%
+62874.6837898545	0\\
+};
+\addlegendentry{Branch Point}
+
+\end{axis}
+\end{tikzpicture}%

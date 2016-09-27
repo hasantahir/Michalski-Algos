@@ -1,0 +1,61 @@
+% This file was created by matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.89412,0.10196,0.10980}%
+\definecolor{mycolor2}{rgb}{0.21569,0.49412,0.72157}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=4.521in,
+height=3.55in,
+at={(0.758in,0.497in)},
+scale only axis,
+xmin=-15000000,
+xmax=15000000,
+xlabel style={font=\color{white!15!black}},
+xlabel={$\Re\textrm{k}_{\rho}$},
+ymin=-8000000000,
+ymax=6000000000,
+ylabel style={font=\color{white!15!black}},
+ylabel={$\Im\textrm{k}_{\rho}$},
+axis background/.style={fill=white},
+title style={font=\bfseries},
+title={TM Pole Locations for thickness d = 8e-08m},
+legend style={at={(0.97,0.03)}, anchor=south east, legend cell align=left, align=left, draw=white!15!black}
+]
+\addplot [color=mycolor1, draw=none, mark size=1.4pt, mark=square*, mark options={solid, fill=mycolor1, mycolor1}]
+  table[row sep=crcr]{%
+13738694.4881332	-19634913.5592603\\
+-13738694.4881332	19634913.5592603\\
+13738648.809873	-58904832.4299219\\
+-13738648.809873	58904832.4299219\\
+13738641.7148084	-98174751.1397654\\
+-13738641.7148084	98174751.1397654\\
+13738639.606034	-137444664.527244\\
+-13738639.606034	137444664.527244\\
+13738638.2631222	-215984485.864276\\
+-13738638.2631222	215984485.864276\\
+13738638.0003085	-255254395.410008\\
+-13738638.0003085	255254395.410008\\
+13738637.4883634	-530143756.570379\\
+-13738637.4883634	530143756.570379\\
+13738637.3802653	-962112748.108353\\
+-13738637.3802653	962112748.108353\\
+13738637.3555575	-1394081738.61292\\
+-13738637.3555575	1394081738.61292\\
+13738637.3396824	-2572178984.35823\\
+-13738637.3396824	2572178984.35823\\
+13738637.335624	-4142975311.44445\\
+-13738637.335624	4142975311.44445\\
+13738637.3337975	-7795076771.4661\\
+};
+\addlegendentry{Poles}
+
+\addplot [color=mycolor2, draw=none, mark size=3.5pt, mark=diamond*, mark options={solid, fill=mycolor2, mycolor2}]
+  table[row sep=crcr]{%
+62874.6837898545	0\\
+};
+\addlegendentry{Branch Point}
+
+\end{axis}
+\end{tikzpicture}%

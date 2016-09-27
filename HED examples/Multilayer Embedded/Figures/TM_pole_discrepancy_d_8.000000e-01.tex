@@ -1,0 +1,83 @@
+% This file was created by matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.89412,0.10196,0.10980}%
+\definecolor{mycolor2}{rgb}{0.21569,0.49412,0.72157}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=4.521in,
+height=3.55in,
+at={(0.758in,0.497in)},
+scale only axis,
+xmin=0,
+xmax=25,
+xlabel style={font=\color{white!15!black}},
+xlabel={$\textrm{Real Relative Distance from Branch Point}$},
+ymin=-1e-15,
+ymax=1e-15,
+ylabel style={font=\color{white!15!black}},
+ylabel={$\textrm{Imaginary Relative Distance from Branch Point}$},
+axis background/.style={fill=white},
+title style={font=\bfseries},
+title={Evaluation of Denominator at pole locations},
+legend style={legend cell align=left, align=left, draw=white!15!black}
+]
+\addplot [color=mycolor1, draw=none, mark size=1.4pt, mark=square*, mark options={solid, fill=mycolor1, mycolor1}]
+  table[row sep=crcr]{%
+1	0\\
+2	0\\
+3	-2.22044604925031e-16\\
+4	-2.22044604925031e-16\\
+5	-4.44089209850063e-16\\
+6	-4.44089209850063e-16\\
+7	-2.22044604925031e-16\\
+8	-2.22044604925031e-16\\
+9	1.11022302462516e-16\\
+10	1.11022302462516e-16\\
+11	0\\
+12	0\\
+13	-2.22044604925031e-16\\
+14	-2.22044604925031e-16\\
+15	0\\
+16	0\\
+17	1.11022302462516e-16\\
+18	1.11022302462516e-16\\
+19	1.11022302462516e-16\\
+20	1.11022302462516e-16\\
+21	-2.22044604925031e-16\\
+22	-2.22044604925031e-16\\
+23	-2.22044604925031e-16\\
+};
+\addlegendentry{Real Part}
+
+\addplot [color=mycolor2, draw=none, mark size=1.4pt, mark=square*, mark options={solid, fill=mycolor2, mycolor2}]
+  table[row sep=crcr]{%
+1	-2.60619332375939e-16\\
+2	-2.60619332375939e-16\\
+3	-1.77612909341656e-16\\
+4	-1.77612909341656e-16\\
+5	-4.59124071133606e-16\\
+6	-4.59124071133606e-16\\
+7	-8.88525521228765e-16\\
+8	-8.88525521228765e-16\\
+9	-9.62758011381558e-16\\
+10	-9.62758011381558e-16\\
+11	-2.04753572124803e-17\\
+12	-2.04753572124803e-17\\
+13	-4.37732372751117e-16\\
+14	-4.37732372751117e-16\\
+15	8.0121392594472e-16\\
+16	8.0121392594472e-16\\
+17	3.96049354318505e-16\\
+18	3.96049354318505e-16\\
+19	-2.8086987351723e-16\\
+20	-2.8086987351723e-16\\
+21	-2.56051426508492e-16\\
+22	-2.56051426508492e-16\\
+23	3.76133670095614e-16\\
+};
+\addlegendentry{Imaginary Part}
+
+\end{axis}
+\end{tikzpicture}%

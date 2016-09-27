@@ -1,0 +1,56 @@
+% This file was created by matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.89412,0.10196,0.10980}%
+\definecolor{mycolor2}{rgb}{0.21569,0.49412,0.72157}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=4.521in,
+height=3.55in,
+at={(0.758in,0.497in)},
+scale only axis,
+xmin=-120000,
+xmax=0,
+xlabel style={font=\color{white!15!black}},
+xlabel={$\textrm{Real Relative Distance from Branch Point}$},
+ymin=-16000000,
+ymax=2000000,
+ylabel style={font=\color{white!15!black}},
+ylabel={$\textrm{Imaginary Relative Distance from Branch Point}$},
+axis background/.style={fill=white},
+title style={font=\bfseries},
+title={Relative TM Pole Locations for thickness d = 8e-05m},
+legend style={at={(0.97,0.03)}, anchor=south east, legend cell align=left, align=left, draw=white!15!black}
+]
+\addplot [color=mycolor1, draw=none, mark size=1.4pt, mark=square*, mark options={solid, fill=mycolor1, mycolor1}]
+  table[row sep=crcr]{%
+-29951.43929423	-32507.8128391501\\
+-83610.4436393369	32507.8128391501\\
+-6395.50137601812	-7957.03171518219\\
+-107166.381557549	7957.03171518219\\
+-45560.1510430881	-248891.643273022\\
+-68001.7318904788	248891.643273022\\
+-45775.4941707952	-328943.512403815\\
+-67786.3887627716	328943.512403815\\
+-46000.9974673113	-684875.218840203\\
+-67560.8854662556	684875.218840203\\
+-46028.0745990678	-881747.327883567\\
+-67533.8083344991	881747.327883567\\
+-46043.6527570154	-1117751.4576174\\
+-67518.2301765515	1117751.4576174\\
+-46051.8254311494	-1353621.65110182\\
+-67510.0575024174	1353621.65110182\\
+-46069.1045660913	-11250685.4084279\\
+-46069.2292164185	-15766765.887904\\
+};
+\addlegendentry{Poles}
+
+\addplot [color=mycolor2, draw=none, mark size=3.5pt, mark=diamond*, mark options={solid, fill=mycolor2, mycolor2}]
+  table[row sep=crcr]{%
+0	0\\
+};
+\addlegendentry{Branch Point}
+
+\end{axis}
+\end{tikzpicture}%

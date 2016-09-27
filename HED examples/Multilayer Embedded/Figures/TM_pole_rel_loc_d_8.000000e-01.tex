@@ -1,0 +1,61 @@
+% This file was created by matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.89412,0.10196,0.10980}%
+\definecolor{mycolor2}{rgb}{0.21569,0.49412,0.72157}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=4.521in,
+height=3.55in,
+at={(0.758in,0.497in)},
+scale only axis,
+xmin=-15000000,
+xmax=15000000,
+xlabel style={font=\color{white!15!black}},
+xlabel={$\textrm{Real Relative Distance from Branch Point}$},
+ymin=-8000000000,
+ymax=6000000000,
+ylabel style={font=\color{white!15!black}},
+ylabel={$\textrm{Imaginary Relative Distance from Branch Point}$},
+axis background/.style={fill=white},
+title style={font=\bfseries},
+title={Relative TM Pole Locations for thickness d = 8e-08m},
+legend style={at={(0.97,0.03)}, anchor=south east, legend cell align=left, align=left, draw=white!15!black}
+]
+\addplot [color=mycolor1, draw=none, mark size=1.4pt, mark=square*, mark options={solid, fill=mycolor1, mycolor1}]
+  table[row sep=crcr]{%
+13675819.8043433	-19634913.5592603\\
+-13801569.171923	19634913.5592603\\
+13675774.1260831	-58904832.4299219\\
+-13801523.4936628	58904832.4299219\\
+13675767.0310185	-98174751.1397654\\
+-13801516.3985983	98174751.1397654\\
+13675764.9222441	-137444664.527244\\
+-13801514.2898238	137444664.527244\\
+13675763.5793323	-215984485.864276\\
+-13801512.946912	215984485.864276\\
+13675763.3165186	-255254395.410008\\
+-13801512.6840983	255254395.410008\\
+13675762.8045736	-530143756.570379\\
+-13801512.1721533	530143756.570379\\
+13675762.6964755	-962112748.108353\\
+-13801512.0640552	962112748.108353\\
+13675762.6717676	-1394081738.61292\\
+-13801512.0393473	1394081738.61292\\
+13675762.6558925	-2572178984.35823\\
+-13801512.0234722	2572178984.35823\\
+13675762.6518342	-4142975311.44445\\
+-13801512.0194139	4142975311.44445\\
+13675762.6500077	-7795076771.4661\\
+};
+\addlegendentry{Poles}
+
+\addplot [color=mycolor2, draw=none, mark size=3.5pt, mark=diamond*, mark options={solid, fill=mycolor2, mycolor2}]
+  table[row sep=crcr]{%
+0	0\\
+};
+\addlegendentry{Branch Point}
+
+\end{axis}
+\end{tikzpicture}%
