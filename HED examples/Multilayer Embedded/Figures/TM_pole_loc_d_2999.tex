@@ -1,0 +1,71 @@
+% This file was created by matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{0.89412,0.10196,0.10980}%
+\definecolor{mycolor2}{rgb}{0.21569,0.49412,0.72157}%
+\definecolor{mycolor3}{rgb}{0.30196,0.68627,0.29020}%
+\definecolor{mycolor4}{rgb}{0.59608,0.30588,0.63922}%
+\definecolor{mycolor5}{rgb}{1.00000,0.49804,0.00000}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=4.521in,
+height=3.55in,
+at={(0.758in,0.497in)},
+scale only axis,
+xmin=-1.00315707054896e-17,
+xmax=1,
+xlabel style={font=\color{white!15!black}},
+xlabel={$\Re\textrm{k}_{\rho}$},
+ymin=-500,
+ymax=3500,
+ylabel style={font=\color{white!15!black}},
+ylabel={$\Im\textrm{k}_{\rho}$},
+axis background/.style={fill=white},
+title style={font=\bfseries},
+title={TM Pole Locations for thickness d = 0.0003m},
+legend style={at={(0.03,0.03)}, anchor=south west, legend columns=2, legend cell align=left, align=left, draw=white!15!black}
+]
+\addplot [color=mycolor1, draw=none, mark size=1.4pt, mark=square*, mark options={solid, fill=mycolor1, mycolor1}]
+  table[row sep=crcr]{%
+0.866105853021997	-2.53708745595214e-20\\
+0.866338102639678	1.28384424495138e-17\\
+4.71091333495877e-18	38.4607728272508\\
+-2.29882391613789e-19	38.4607780576401\\
+2.16924922888402e-17	73.942827599212\\
+1.67716906260785e-17	75.4419401644884\\
+1.33940216622703e-17	76.4413456133584\\
+-1.54931992627038e-18	77.4407514227211\\
+-3.16485340813166e-18	77.940452200373\\
+-8.95824892707138e-18	383.237452439764\\
+-8.85409662170052e-18	536.633259921375\\
+-8.85352920672121e-18	1034.79412634182\\
+-1.00315707054896e-17	2070.08863677285\\
+};
+\addlegendentry{Poles}
+
+\addplot [color=mycolor2, draw=none, mark size=3.5pt, mark=diamond*, mark options={solid, fill=mycolor2, mycolor2}]
+  table[row sep=crcr]{%
+1	0\\
+};
+\addlegendentry{Branch Point}
+
+\addplot [color=mycolor3, draw=none, mark size=3.5pt, mark=diamond*, mark options={solid, fill=mycolor4, mycolor3}, forget plot]
+  table[row sep=crcr]{%
+0	3162.27766016838\\
+};
+\addplot [color=mycolor4, draw=none, mark size=3.5pt, mark=diamond*, mark options={solid, fill=mycolor5, mycolor4}, forget plot]
+  table[row sep=crcr]{%
+0	0\\
+};
+\addplot [color=mycolor5, draw=none, mark=square*, mark options={solid, fill=mycolor5, mycolor5}, forget plot]
+  table[row sep=crcr]{%
+0	0\\
+0	0\\
+0	0\\
+0	0\\
+0	0\\
+0	0\\
+};
+\end{axis}
+\end{tikzpicture}%

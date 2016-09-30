@@ -10,12 +10,12 @@ width=4.521in,
 height=3.55in,
 at={(0.758in,0.497in)},
 scale only axis,
-xmin=0,
-xmax=20,
+xmin=1,
+xmax=10,
 xlabel style={font=\color{white!15!black}},
 xlabel={$\textrm{Real Relative Distance from Branch Point}$},
-ymin=-1e-15,
-ymax=6e-16,
+ymin=-3e-14,
+ymax=5e-14,
 ylabel style={font=\color{white!15!black}},
 ylabel={$\textrm{Imaginary Relative Distance from Branch Point}$},
 axis background/.style={fill=white},
@@ -25,49 +25,31 @@ legend style={at={(0.97,0.03)}, anchor=south east, legend columns=2, legend cell
 ]
 \addplot [color=mycolor1, draw=none, mark size=1.4pt, mark=square*, mark options={solid, fill=mycolor1, mycolor1}]
   table[row sep=crcr]{%
-1	3.33066907387547e-16\\
-2	3.33066907387547e-16\\
+1	1.11022302462516e-16\\
+2	0\\
 3	0\\
 4	0\\
-5	4.44089209850063e-16\\
-6	4.44089209850063e-16\\
-7	-2.22044604925031e-16\\
+5	0\\
+6	0\\
+7	0\\
 8	-2.22044604925031e-16\\
 9	0\\
-10	0\\
-11	0\\
-12	0\\
-13	2.22044604925031e-16\\
-14	2.22044604925031e-16\\
-15	-2.22044604925031e-16\\
-16	-2.22044604925031e-16\\
-17	0\\
-18	0\\
-19	0\\
+10	1.11022302462516e-16\\
 };
 \addlegendentry{Real Part}
 
 \addplot [color=mycolor2, draw=none, mark size=1.4pt, mark=square*, mark options={solid, fill=mycolor2, mycolor2}]
   table[row sep=crcr]{%
-1	5.55111512312578e-16\\
-2	5.55111512312578e-16\\
-3	4.85722573273506e-17\\
-4	4.85722573273506e-17\\
-5	-6.66133814775094e-16\\
-6	-6.66133814775094e-16\\
-7	1.52655665885959e-16\\
-8	1.52655665885959e-16\\
-9	1.6344347750219e-16\\
-10	1.6344347750219e-16\\
-11	-8.83407930141189e-16\\
-12	-8.83407930141189e-16\\
-13	2.15268341346997e-16\\
-14	2.15268341346997e-16\\
-15	2.06947089673171e-16\\
-16	2.06947089673171e-16\\
-17	-1.1776468472266e-16\\
-18	-1.1776468472266e-16\\
-19	4.16287894455282e-16\\
+1	-2.28940130742039e-15\\
+2	-5.74171786504873e-15\\
+3	-2.51691029129475e-14\\
+4	6.87123968834413e-15\\
+5	4.08596767531577e-14\\
+6	7.14706072102445e-15\\
+7	3.30430127704062e-14\\
+8	1.21014309684142e-14\\
+9	-1.00752739484733e-14\\
+10	7.59114993087451e-15\\
 };
 \addlegendentry{Imaginary Part}
 

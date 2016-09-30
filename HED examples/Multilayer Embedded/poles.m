@@ -3,14 +3,14 @@ clear;close all;tic
 f = 1e12;
 omega = 2*pi*f;
 lambda = 3e8/f;
-num = 1e3; %Size of the arrays
+num = 1e2; %Size of the arrays
 
 % Example Validations
 
 % Material Properties
-ep1 = 1; % Air
-ep2 = 9 ; % GaN/AlGaN layers combined
-ep3 = 11.9; % Silicon base
+ep1 = 1.1; % Air
+ep2 = -1e0 ; % GaN/AlGaN layers combined
+ep3 = 1.1; % Silicon base
 
 % EM constants
 mu0 = 4*pi*1e-7;
@@ -23,7 +23,7 @@ k3 = omega*sqrt(mu0*ep0*ep3);
 
 
 % Middle Layer thickness
-d = 1000e-6;
+d = .5*lambda;
 
 % Source Location
 zp = -d/2;
@@ -71,12 +71,12 @@ B = @(kp) (Gamma_right(kp) .* exp(-1i*kz2(kp)*2*z1))./(1 - Gamma_left(kp).*Gamma
 % Denominator
 D = @(kp) 1 - Gamma_left(kp).*Gamma_right(kp).*exp(-2i * kz2(kp) * d);
 
-lxlim = k2 / 2;
-uxlim = k3 * 2;
+lxlim = k2/1.2;
+uxlim = 1.2*k1;
 p = linspace(lxlim,uxlim,num);
 root = [];
 for i = 1 : length(p)
-    r = newtzero(D,p(i));
+    r = newtzero(D,p(i) + .01i);
     root = vertcat(root,r);
 end
 % Sort the array
@@ -87,7 +87,7 @@ if ~isempty(root)
     
     while ~isempty(root)
         vct = abs(root - root(1)) < 1e-9; % Minimum spacing between roots.
-        C = root(vct);  %C has roots grouped close together.
+        C = root(vct);  % C has roots grouped close together.
         [idx,idx] = min(abs(D(C)));  % Pick the best root per group.
         rt(cnt) = C(idx); %  Most root vectors are small.
         root(vct) = []; % Deplete the pool of roots.
@@ -96,18 +96,27 @@ if ~isempty(root)
     root = sort(rt).';  % return a nice, sorted column vector
 end
 
+
+%% Physical Roots
+Real_roots = root(real(root)>k1);
 % % Plot
 figure(1)
-N = 2; % Number of colors to be used
+N = 5; % Number of colors to be used
 % Use Brewer-map color scheme
 axes('ColorOrder',brewermap(N,'Set1'),'NextPlot','replacechildren')
 Colord = get(gca, 'ColorOrder');
 
-plot(real(root), (imag(root)), 's', 'markersize',4,...
+plot(real(root)/k1, (imag(root)/k1), 's', 'markersize',4,...
     'MarkerFaceColor',Colord(1,:));
 hold on
-plot(real(k2) , imag(k2), 'd', 'markersize',4,...
+plot(real(k2)/k1 , imag(k2)/k1, 'd', 'markersize',4,...
     'MarkerFaceColor',Colord(2,:));
+plot(real(k1)/k1 , imag(k1)/k1, 'd', 'markersize',4,...
+    'MarkerFaceColor',Colord(4,:));
+plot(real(k3)/k1 , imag(k3)/k1, 'd', 'markersize',4,...
+    'MarkerFaceColor',Colord(5,:));
+plot(real(Real_roots)/k1 , imag(Real_roots)/k1, 's', 'markersize',6,...
+    'MarkerFaceColor',Colord(5,:));
 xlabel('$\Re\textrm{k}_{\rho}$','interpreter','latex')
 ylabel('$\Im\textrm{k}_{\rho}$','interpreter','latex')
 legend('Poles','Branch Point',...
@@ -153,10 +162,10 @@ N = 2; % Number of colors to be used
 axes('ColorOrder',brewermap(N,'Set1'),'NextPlot','replacechildren');
 Colord = get(gca, 'ColorOrder');
 %
-plot(real(root) - real(k2), (imag(root)), 's', 'markersize',4,...
+plot(real(root) , (imag(root)), 's', 'markersize',4,...
     'MarkerFaceColor',Colord(1,:));
 hold on
-plot(real(k2) - real(k2) , imag(k2) - imag(k2), 'd', 'markersize',4,...
+plot(real(k2)  , imag(k2) , 'd', 'markersize',4,...
     'MarkerFaceColor',Colord(2,:));
 %
 xlabel('$\textrm{Real Relative Distance from Branch Point}$','interpreter','latex')

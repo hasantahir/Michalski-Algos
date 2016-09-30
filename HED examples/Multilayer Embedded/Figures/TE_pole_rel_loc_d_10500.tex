@@ -10,46 +10,37 @@ width=4.521in,
 height=3.55in,
 at={(0.758in,0.497in)},
 scale only axis,
-xmin=-140000,
-xmax=0,
+xmin=-5000,
+xmax=25000,
 xlabel style={font=\color{white!15!black}},
 xlabel={$\textrm{Real Relative Distance from Branch Point}$},
-ymin=-1000000,
-ymax=2000000,
+ymin=-5000000,
+ymax=30000000,
 ylabel style={font=\color{white!15!black}},
 ylabel={$\textrm{Imaginary Relative Distance from Branch Point}$},
 axis background/.style={fill=white},
 title style={font=\bfseries},
-title={Relative TM Pole Locations for thickness d = 0.001m},
+title={Relative TE Pole Locations for thickness d = 0.00105m},
 legend style={legend columns=2, legend cell align=left, align=left, draw=white!15!black}
 ]
 \addplot [color=mycolor1, draw=none, mark size=1.4pt, mark=square*, mark options={solid, fill=mycolor1, mycolor1}]
   table[row sep=crcr]{%
--32754.6430908662	-2794.9139054897\\
--92994.7244888429	2794.9139054897\\
--60192.9861970829	-38793.9320063191\\
--65556.3813826261	38793.9320063191\\
--19772.3258600459	-2021.4352784844\\
--105977.041719663	2021.4352784844\\
--3966.61482319376	-319.945545826876\\
--121782.752756515	319.945545826876\\
--61722.5378576941	-254676.830391479\\
--64026.8297220149	254676.830391479\\
--61730.7257756078	-277275.026326314\\
--64018.6418041012	277275.026326314\\
--61742.9025223246	-325419.788902802\\
--64006.4650573844	325419.788902802\\
--61747.4533036051	-350983.720080416\\
--64001.9142761039	350983.720080416\\
--61764.3729756497	-557238.379092987\\
--63984.9946040593	557238.379092987\\
--63974.8376940696	1813179.94974341\\
+17204.8461343097	-3.68370393756056e-14\\
+17205.3246546598	1.87418909698843e-14\\
+-9.17817914618904e-14	154170.074799872\\
+-1.20205604457538e-13	187332.247387389\\
+4.09477933150159e-15	268454.771191894\\
+-5.09212408937633e-14	379415.626223248\\
+5.70311250075402e-14	1531713.01071326\\
+-5.07056456073876e-14	11956331.189566\\
+6.4367867284859e-14	24099785.651625\\
+-1.51217472714738e-13	27281792.2574163\\
 };
 \addlegendentry{Poles}
 
 \addplot [color=mycolor2, draw=none, mark size=3.5pt, mark=diamond*, mark options={solid, fill=mycolor2, mycolor2}]
   table[row sep=crcr]{%
-0	0\\
+20958.2279299515	0\\
 };
 \addlegendentry{Branch Point}
 
