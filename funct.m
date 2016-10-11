@@ -39,7 +39,7 @@ end
 % t = 1;
 % y = exp(-x*z(i))*besselj(0,p*x)*besselj(3/2,x*t);
 
-<<<<<<< HEAD
+% <<<<<<< HEAD
 % %% Reuse this part in FindFirstZeros.m
 % % For figure 7b
 % t = 1;
@@ -57,7 +57,7 @@ end
 %     y = exp(-x*z)*J*x^.5;
 %     
 % end
-=======
+% =======
 %% Reuse this part in FindFirstZeros.m
 % For figure 7b
 t = 1;
@@ -76,7 +76,7 @@ else
     
 end
 end
->>>>>>> master
+% >>>>>>> master
 
 
 %% From reference [1], eq 78

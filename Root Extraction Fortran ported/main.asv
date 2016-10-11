@@ -1,0 +1,217 @@
+clear; clc
+% !---- Here we declare the namelist /INPUT/ that defines the search parameters.
+% !
+% !     It is useful to remember that
+% !
+% !        title     is a character string used to name the data
+% !,.i
+% !        ifunct    is an integer that choose one of the functions
+% !                  coded into routine FDF.
+% !
+% !        point(1)  defines the REAL value of the lower left hand co-ordinate
+% !                  of the rectangle
+% !
+% !        point(2)  defines the IMAGINARY value of the lower left hand co-ordinate
+% !                  of the rectangle
+% !
+% !        step(1)   defines the length of the rectangle on the REAL axis.
+% !
+% !        step(2)   defines the length of the  rectangle on the IMAGINARY axis
+% !
+% !        droot_converged  We declare that a root has been found whenever
+% !                         ABS(f(z)) < droot_converged
+% !
+% !        zadaptive When TRUE the QUADPACk adaptive quadrature mechanism is
+% !                  used, otherwise fixed point integration is used with NPTS.
+% !
+% !        npts      Number of points in per side of rectangle in the fixed
+% !                  integration quadrature
+% !
+% !        zaitken   A logical value that determines whether, or not, we use the
+% !                  Aitken acceleration technique during the Halley method.
+% !
+% !
+% global maxroots
+% global droot_converged zadaptive zaitken
+% global maxboxes max_roots_per_box
+% global point Step npts 
+% global F
+
+
+maxroots = 20;
+% s = zeros(1, 2*maxroots + 1);
+
+
+droot_converged = 1e-10;
+
+% zadaptive = false;
+% % npts = 0;
+% zaitken = false;
+
+maxboxes = 500;
+max_roots_per_box = 5;
+
+
+
+% Import from Namelist
+title = 'Kravanja et al (2002) - Example 4 - roots';
+ifunct = 9;
+point  = -2.2 - 3.5*1i;
+Step   = 5.0 + 8.0 *1i;
+droot_converged = 1.0d-1;
+zaitken = false;
+zadaptive = false;
+npts = 8192;
+maxboxes = 500;
+max_roots_per_box = 5;
+% 
+% point = -20.3 -20.7i;
+% Step = 40.6 + 41.4i;
+% !
+% !----------------------------------------------------------------------
+% !
+% !     BOX SPLITTING FOR THIS INPUT DOMAIN
+% !
+% !----------------------------------------------------------------------
+% !
+% !---- For multiple input sets, we'd bettwe deallocate any previously
+% !     allocated dynamic arrays for the box splitting.
+% !
+% !
+% !---- Initializes all boxes to have -1 roots. We use this as flag
+% !     later; remember that the splitting may produce some sub-boxes
+% !     with zero roots and that soem of the allocated space may not
+% !     even be used.
+% !
+% nroots = -1*ones(1, maxboxes);
+% !
+% !---- Now do the work of splitting the contour
+% !
+% call  split_contour(point,step,&
+%                     max_roots_per_box,points,steps,nrootsy,&
+%                     maxboxes,'TRUE')
+% !
+% [points, Steps, nroots] = split_contour(point,Step,max_roots_per_box,points,Steps,nroots, maxboxes,npts);
+% [points, Steps, nroots, maxboxes,npts] =  split_contour(point,Step,max_roots_per_box, npts);
+% for ibox = 1 : maxboxes
+%     if nrootsy <= 0
+%         continue;
+%     end
+    % !
+    % !----------------------------------------------------------------------
+    % !
+    % !     Step 1:  ROOT COUNTING and CONTOUR INTEGRALS
+    % !
+    % !----------------------------------------------------------------------
+    % !
+    % !---- Count the number of roots within the rectangle now by examination
+    % !     of the change in the argument and also compute the integrals "s",
+    % !     defined in the paper, need to construct the matrix eigenvalue
+    % !     problem.
+    % !
+    % !     The integrals will becomputed wither using fixed point quadrature
+    % !     or by using an adaptive Gauus-Kronod scheme from QUADPACK.
+    % !
+    % call countz(points(1,ibox), steps(1,ibox), zadaptive, npts, maxroots, nroots, s)
+    [nroots, s] = countz (point, Step, npts, maxroots)
+    % !
+    % !---- We'd better be careful that "nroots" does not
+    % !     exceed "maxroots".
+    % !
+    % !     Also, we'd better check that actually have
+    % !     some roots to find.
+    % !
+    % !
+    % !---- Ok, so now we initialize the allocated space
+    % !
+    k = [1, nroots];
+    l = [1, 8*nroots];
+%     zinitial_roots =  zeros(k);
+    zinitial_func  =  zeros(k);
+    zfinal_roots  =  zeros(k);
+    zfinal_func  =  zeros(k);
+%     radii         =  zeros(k);
+%     indexv        =  zeros(k);
+    Alpha         =  zeros(k);
+    Beta         =  zeros(k);
+%     H1 = zeros(k(2)); % k by k array
+%     H = zeros(k(2)); % k by k array
+    vl1 = zeros(k(2)); % k by k array
+    vr1 = zeros(k(2)); % k by k array
+    work = zeros(l);
+    rwork = zeros(l);
+    % !
+    % !----------------------------------------------------------------------
+    % !
+    % !     Step 2:  GENERALIZED EIGENVALUE PROBLEM
+    % !
+    % !----------------------------------------------------------------------
+    % !
+    % !---- Now build the matrices HMAT1 and HMAT as defined in the
+    % !     theory. The roots will be the eigenvalues, "lambda", of
+    % !     the system
+    % !
+    % !         HMAT1 - lambda*HMAT
+    % !
+    for k = 1 : nroots
+        for l = 1 : nroots
+            H1(k,l) = s(k + l);
+            H(k,l) = s(k + l - 1 );
+        end
+    end
+    zinitial_roots = eigs(H1, H);
+    % !
+    % !---- Solve the generalized eigenvalue problem using the LaPack routine
+    % !
+    for k = 1 : nroots
+        zinitial_func(k) = FZ(zinitial_roots(k));
+    end
+    % !
+    % !----------------------------------------------------------------------
+    % !
+    % !     Step 3:  ITERATE ROOTS USING HALLEY'S METHOD
+    % !
+    % !----------------------------------------------------------------------
+    % !
+    % !---- Prepare the co-ordinates of the rectangle in complex form
+    % !
+    qpl = point;
+    % !
+    qpt = point + Step;
+    % !
+    % !---- Ok, so let's see if we have a converged solution at this stage
+    % !     for each root. If not, apply Halley's method
+    % !
+    for k = 1 : nroots
+        if(abs(zinitial_func(k)) < droot_converged)
+            
+            zfinal_roots(k) = zinitial_roots(k);
+            zfinal_func(k)  = zinitial_func(k);
+        else
+            % write(6,3050) k
+            % !
+            % call halley3(qpl, qpt,          &
+            % zinitial_roots(k), &
+            % droot_converged,   &
+            % zaitken,           &
+            % zfinal_roots(k))
+            zfinal_roots(k) = halley3(qpl, qpt, zinitial_roots(k), droot_converged,zaitken);
+            % !
+            % !......... Compute the value of the function at the converged root.
+            % !
+            zfinal_func(k) = FZ(zfinal_roots(k));
+        end
+    end
+    % !
+    % !----------------------------------------------------------------------
+    % !
+    % !     Step 4:  PREPARE FINAL RESULTS
+    % !
+    % !----------------------------------------------------------------------
+    % !
+    % !---- Compute an index such that the compted roots will be ordered
+    % !     in terms of increasing magnitudes (i.e radius from origin).
+    % !
+    radii = abs(zfinal_roots);
+    indexv = indexx(nroots,radii);
+% end

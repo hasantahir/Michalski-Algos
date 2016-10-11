@@ -3,14 +3,15 @@ clear;close all;tic
 f = 1e12;
 omega = 2*pi*f;
 lambda = 3e8/f;
-num = 1e2; %Size of the arrays
+num = 500; %Size of the arrays
 
 % Example Validations
 
 % Material Properties
-ep1 = 1.1; % Air
-ep2 = -1e0 ; % GaN/AlGaN layers combined
-ep3 = 1.1; % Silicon base
+ep1 = 1; % Air
+ep2 = 9.7 ; % GaN/AlGaN layers combined
+ep3 = 11; % Silicon base
+% backed by a PEC layer
 
 % EM constants
 mu0 = 4*pi*1e-7;
@@ -23,7 +24,7 @@ k3 = omega*sqrt(mu0*ep0*ep3);
 
 
 % Middle Layer thickness
-d = .5*lambda;
+d = 1.0*lambda;
 
 % Source Location
 zp = -d/2;
@@ -31,7 +32,7 @@ zp = -d/2;
 % Layer Heights
 z0 = -d;
 z1 = 0;
-
+z_pec = -5*d;
 
 % TE/TM switch
 nu = 1;
@@ -55,9 +56,26 @@ else
     Z2 = @(kp) kz2(kp)./(omega*ep2);
     Z3 = @(kp) kz3(kp)./(omega*ep3);
 end
+% Gammas
+Gamma_32 = @(kp)(Z3(kp) - Z2(kp))./ (Z3(kp) + Z2(kp));
+Gamma_43 =  -1;
 
-% Reflection Coefficients
-Gamma_left = @(kp)(Z3(kp) - Z2(kp)) ./ (Z3(kp) + Z2(kp)); % Left-looking
+% % Left Looking Input Impedance
+% Z_in_left = @(kp)  Z2(kp) .* (Z3(kp) + Z2(kp)*1i.*tan(kz2(kp)*d/2))...
+%     ./(Z2(kp) + Z3(kp)*1i.*tan(kz2(kp)*d/2));
+% 
+% % Right Looking Input Impedance
+% Z_in_right = @(kp) Z2(kp) .* (Z1(kp) + Z2(kp)*1i.*tan(kz2(kp)*d/2))...
+%     ./(Z2(kp) + Z1(kp)*1i.*tan(kz2(kp)*d/2));
+% 
+% % % Reflection Coefficients
+% Gamma_left = @(kp) (Z_in_left(kp) - Z2(kp)) ./ (Z_in_left(kp) + Z2(kp)); % Left-looking
+% Gamma_right = @(kp)  (Z_in_right(kp) - Z2(kp)) ./ (Z_in_right(kp) + Z2(kp)); % Right-looking
+
+% % Reflection Coefficients
+% Gamma_left = @(kp)(Z3(kp) - Z2(kp)) ./ (Z3(kp) + Z2(kp)); % Left-looking
+Gamma_left = @(kp)(Gamma_32(kp) + (-1)*exp(-1i*kz3(kp)*4*d))...
+    ./(1 + Gamma_32(kp).*(-1).*exp(-1i*kz3(kp)*4*d)); % Left-looking
 Gamma_right = @(kp) (Z1(kp) - Z2(kp)) ./ (Z1(kp) + Z2(kp)); % Right-looking
 
 % Unknown A
@@ -71,12 +89,12 @@ B = @(kp) (Gamma_right(kp) .* exp(-1i*kz2(kp)*2*z1))./(1 - Gamma_left(kp).*Gamma
 % Denominator
 D = @(kp) 1 - Gamma_left(kp).*Gamma_right(kp).*exp(-2i * kz2(kp) * d);
 
-lxlim = k2/1.2;
-uxlim = 1.2*k1;
+lxlim = k1*.5;
+uxlim = k3*2;
 p = linspace(lxlim,uxlim,num);
 root = [];
 for i = 1 : length(p)
-    r = newtzero(D,p(i) + .01i);
+    r = newtzero(D,1i*p(i));
     root = vertcat(root,r);
 end
 % Sort the array
@@ -86,7 +104,7 @@ if ~isempty(root)
     cnt = 1;  % Counter for while loop.
     
     while ~isempty(root)
-        vct = abs(root - root(1)) < 1e-9; % Minimum spacing between roots.
+        vct = abs(root - root(1)) < 1e-10; % Minimum spacing between roots.
         C = root(vct);  % C has roots grouped close together.
         [idx,idx] = min(abs(D(C)));  % Pick the best root per group.
         rt(cnt) = C(idx); %  Most root vectors are small.
@@ -98,7 +116,7 @@ end
 
 
 %% Physical Roots
-Real_roots = root(real(root)>k1);
+% Real_roots = root(real(root)>k1);
 % % Plot
 figure(1)
 N = 5; % Number of colors to be used
@@ -106,17 +124,17 @@ N = 5; % Number of colors to be used
 axes('ColorOrder',brewermap(N,'Set1'),'NextPlot','replacechildren')
 Colord = get(gca, 'ColorOrder');
 
-plot(real(root)/k1, (imag(root)/k1), 's', 'markersize',4,...
+plot((real(root)/k1), (imag(root)/k1), 's', 'markersize',4,...
     'MarkerFaceColor',Colord(1,:));
 hold on
-plot(real(k2)/k1 , imag(k2)/k1, 'd', 'markersize',4,...
+plot((real(k1)/k1) , (imag(k1)/k1), 'd', 'markersize',4,...
     'MarkerFaceColor',Colord(2,:));
-plot(real(k1)/k1 , imag(k1)/k1, 'd', 'markersize',4,...
-    'MarkerFaceColor',Colord(4,:));
-plot(real(k3)/k1 , imag(k3)/k1, 'd', 'markersize',4,...
-    'MarkerFaceColor',Colord(5,:));
-plot(real(Real_roots)/k1 , imag(Real_roots)/k1, 's', 'markersize',6,...
-    'MarkerFaceColor',Colord(5,:));
+% plot(real(k1)/k1 , imag(k1)/k1, 'd', 'markersize',4,...
+%     'MarkerFaceColor',Colord(4,:));
+% plot(real(k3)/k1 , imag(k3)/k1, 'd', 'markersize',4,...
+%     'MarkerFaceColor',Colord(5,:));
+% plot(real(Real_roots)/k1 , imag(Real_roots)/k1, 's', 'markersize',6,...
+%     'MarkerFaceColor',Colord(5,:));
 xlabel('$\Re\textrm{k}_{\rho}$','interpreter','latex')
 ylabel('$\Im\textrm{k}_{\rho}$','interpreter','latex')
 legend('Poles','Branch Point',...
@@ -165,7 +183,7 @@ Colord = get(gca, 'ColorOrder');
 plot(real(root) , (imag(root)), 's', 'markersize',4,...
     'MarkerFaceColor',Colord(1,:));
 hold on
-plot(real(k2)  , imag(k2) , 'd', 'markersize',4,...
+plot(real(k1)  , imag(k1) , 'd', 'markersize',4,...
     'MarkerFaceColor',Colord(2,:));
 %
 xlabel('$\textrm{Real Relative Distance from Branch Point}$','interpreter','latex')
@@ -205,17 +223,17 @@ axes('ColorOrder',brewermap(N,'Set1'),'NextPlot','replacechildren')
 % Obtain the colors of the plot to apply it on marker faces
 Colord = get(gca, 'ColorOrder');
 %
-plot(real(D(root)), 's', 'markersize',4,...
+semilogy(abs(real(D(root))), 's', 'markersize',4,...
     'MarkerFaceColor',Colord(1,:));
 hold on
-plot(imag(D(root)), 's', 'markersize',4,...
+semilogy(abs(imag(D(root))), 'o', 'markersize',4,...
     'MarkerFaceColor',Colord(2,:));
 %
-xlabel('$\textrm{Real Relative Distance from Branch Point}$','interpreter','latex')
-ylabel('$\textrm{Imaginary Relative Distance from Branch Point}$','interpreter','latex')
+xlabel('$\textrm{Zero Number}$','interpreter','latex')
+ylabel('$\textrm{Absolute Error}$','interpreter','latex')
 legend('Real Part','Imaginary Part',...
     'Location','southeast','Orientation','horizontal');
-title('Evaluation of Denominator at pole locations');
+title('Evaluation of Denominator at computed zeros');
 % Decorations
 
 box on
@@ -231,9 +249,9 @@ hold off
 % Save tikz figure
 % cleanfigure();
 if nu == 0
-    matlab2tikz('filename',sprintf('figures/TE_pole_discrepancy_d_%d.tex',floor(d*1e7)),'showInfo', false)
+    matlab2tikz('filename',sprintf('figures/TE_pole_discrepancy_with_nopec_d_%d.tex',floor(d*1e7)),'showInfo', false)
 else
-    matlab2tikz('filename',sprintf('figures/TM_pole_discrepancy_d_%d.tex',floor(d*1e7)),'showInfo', false)
+    matlab2tikz('filename',sprintf('figures/TM_pole_discrepancy_nopec_d_%d.tex',floor(d*1e7)),'showInfo', false)
 end
 % End
 toc

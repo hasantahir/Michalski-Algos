@@ -58,7 +58,7 @@ function root = newtzero(f,xr,mx,tol)
 % Author:  Matt Fig
 % Contact:  popkenai@yahoo.com
 
-defaults = {1,100,.5e-13};% Initial guess, max iterations, tolerance.
+defaults = {1,20,1e-7};% Initial guess, max iterations, tolerance.
 
 switch nargin  % Error checking and default assignments.
     case 1
@@ -103,8 +103,8 @@ end
 % LGS = logspace(-3,5,5e3); % Can be altered for wider range or denser search.
 % % LNS = 0:1/1009:1/19;  % Search very close to initial guess too.
 % LNS = linspace(0,.01,1e3);
-LGS = logspace(0,2,220); % Can be altered for wider range or denser search.
-LNS = 0:1/19:18/19;  % Search very close to initial guess too.
+LGS = logspace(-3,2,520); % Can be altered for wider range or denser search.
+LNS = 0:1/109:18/109;  % Search very close to initial guess too.
 xr = [xr-LGS xr+LGS xr-LNS(2:end) xr+LNS].';  % Make vector of guesses.
 xr = sort(xr);
 iter = 1;  % Initialize the counter for the while loop.
@@ -132,12 +132,28 @@ end
 warning on MATLAB:divideByZero % Reset this guy, as promised.
 
 % % Filtering.  We want to filter out certain common results.
-% idxi = abs(imag(xr)) < 5e-15;  % A very small imag term is zero.
-% xr(idxi) = real(xr(idxi));  % Discard small imaginary terms.
-% idxr = abs(real(xr)) < 5e-15;  % A very small real term is zero.
-% xr(idxr) = complex(0,imag(xr(idxr))); % Discard small real terms.
+idxi = abs(imag(xr)) < 5e-15;  % A very small imag term is zero.
+xr(idxi) = real(xr(idxi));  % Discard small imaginary terms.
+idxr = abs(real(xr)) < 5e-15;  % A very small real term is zero.
+xr(idxr) = complex(0,imag(xr(idxr))); % Discard small real terms.
 root = xr(abs(f(xr)) < tol); % Apply the tolerance.
 
 % Next we are going to delete repeat roots.  unique does not work in
 % this case because many repeats are very close to each other but not
 % equal.  For loops are fast enough here, most root vectors are short(ish).
+% Sort the array
+% root = sort(root);
+% % Clean up roots by weeding out too close values
+% if ~isempty(root)
+%     cnt = 1;  % Counter for while loop.
+%     
+%     while ~isempty(root)
+%         vct = abs(root - root(1)) < 1e-10; % Minimum spacing between roots.
+%         C = root(vct);  % C has roots grouped close together.
+%         [idx,idx] = min(abs(f(C)));  % Pick the best root per group.
+%         rt(cnt) = C(idx); %  Most root vectors are small.
+%         root(vct) = []; % Deplete the pool of roots.
+%         cnt = cnt + 1;  % Increment the counter.
+%     end
+%     root = sort(rt).';  % return a nice, sorted column vector
+% end
