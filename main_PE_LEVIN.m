@@ -14,7 +14,7 @@ tol = 1e-15;
 
 % Call PE routine
 % val = PE_Levin(a, tol, q);
-<<<<<<< HEAD
+% <<<<<<< HEAD
 
 %% Call PE_routine for sweep case (e.g. Figure 7a)
 % global z i p
@@ -79,9 +79,9 @@ tol = 1e-15;
 a = 3.247;
 % Call PE routine
 tic
-val = PE_Levin(a, tol, q)
+val = PE_Levin(a, tol, q);
 toc
-=======
+% =======
 
 % % Call PE_routine for sweep case (e.g. Figure 7a)
 % global z i p
@@ -141,4 +141,4 @@ xlabel('\rho')
 ylabel('I(z, \rho, \tau)')
 xlabel('\rho')
 ylabel('I(z, \rho, \tau)')
->>>>>>> master
+% >>>>>>> master

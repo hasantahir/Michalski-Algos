@@ -1,10 +1,10 @@
 clear;close all;tic
 % f = 1e12;
-f = 49e9;
+f = 5e9;
 omega = 2*pi*f;
 lambda = 3e8/f;
-num = 3e1; %Size of the arrays
-tol = 1e-8;
+num = 3e0; %Size of the arrays
+tol = 1e-12;
 % Example Validations
 
 % Material Properties
@@ -44,15 +44,15 @@ d2 = z3 - z2;
 d3 = z4 - z3;
 
 % TE/TM switch
-nu = 0;
+nu = 1;
 
-kz1 = @(kp) sqrt(k1 ^2 - kp .^2);
+kz1 = @(kp) sqrt(k1 ^2  - kp .^2);
 
-kz2 = @(kp) sqrt(k2 ^2 - kp .^2);
+kz2 = @(kp) sqrt(k2 ^2  - kp .^2);
 
-kz3 = @(kp) sqrt(k3 ^2 - kp .^2);
+kz3 = @(kp) sqrt(k3 ^2- kp .^2);
 
-kz4 = @(kp) sqrt(k4 ^2 - kp .^2);
+kz4 = @(kp) sqrtbr(k4 ^2- kp .^2);
 
 % Define impedances
 if nu == 0
@@ -64,10 +64,10 @@ if nu == 0
     Z4 = @(kp) omega./kz4(kp);
 else
     % TM case
-    Z1 = @(kp) kz1(kp)./(omega*ep1);
-    Z2 = @(kp) kz2(kp)./(omega*ep2);
-    Z3 = @(kp) kz3(kp)./(omega*ep3);
-    Z4 = @(kp) kz4(kp)./(omega*ep4);
+    Z1 = @(kp) kz1(kp)./(omega*ep1*ep0);
+    Z2 = @(kp) kz2(kp)./(omega*ep2*ep0);
+    Z3 = @(kp) kz3(kp)./(omega*ep3*ep0);
+    Z4 = @(kp) kz4(kp)./(omega*ep4*ep0);
 end
 
 
@@ -94,7 +94,7 @@ B = @(kp) (Gamma_right(kp) .* exp(-1i*kz2(kp)*2*z3))./(1 - Gamma_left(kp).*Gamma
 D = @(kp) 1 - Gamma_left(kp).*Gamma_right(kp).*exp(-2i * kz2(kp) * d2);
 
 lxlim = 1*k4;
-uxlim = 4.0*k4;
+uxlim = 5.5*k4;
 p = linspace(lxlim,uxlim,num);
 root = [];
 for i = 1 : length(p)
@@ -108,7 +108,7 @@ root = sort(root);
 %     cnt = 1;  % Counter for while loop.
 %     
 %     while ~isempty(root)
-%         vct = abs(root - root(1)) < 1e-6; % Minimum spacing between roots.
+%         vct = abs(root - root(1)) < 1e1; % Minimum spacing between roots.
 %         C = root(vct);  % C has roots grouped close together.
 %         [idx,idx] = min(abs(D(C)));  % Pick the best root per group.
 %         rt(cnt) = C(idx); %  Most root vectors are small.
@@ -117,13 +117,13 @@ root = sort(root);
 %     end
 %     root = sort(rt).';  % return a nice, sorted column vector
 % end
-roots = root((real(root))>k4 & abs(imag(root))<tol);
-roots = roots/k4;
+roots = root((real(root))>k4);
+% roots = roots;
 if ~isempty(roots)
     cnt = 1;  % Counter for while loop.
     
     while ~isempty(roots)
-        vct = abs(roots - roots(1)) < 1e-3; % Minimum spacing between roots.
+        vct = abs(roots - roots(1)) < 1e-4; % Minimum spacing between roots.
         C = roots(vct);  % C has roots grouped close together.
         [idx,idx] = min(abs(D(C)));  % Pick the best root per group.
         rt(cnt) = C(idx); %  Most root vectors are small.
@@ -140,11 +140,13 @@ N = 5; % Number of colors to be used
 % Use Brewer-map color scheme
 axes('ColorOrder',brewermap(N,'Set1'),'NextPlot','replacechildren')
 Colord = get(gca, 'ColorOrder');
-plot(real(k4)/k4, imag(k4)/k4,'d', 'markersize',4,...
-    'MarkerFaceColor',Colord(1,:));
-hold on
 plot(real(root)/k4, imag(root)/k4, 's', 'markersize',4,...
+    'MarkerFaceColor',Colord(1,:));
+
+hold on
+plot(real(k4)/k4, imag(k4)/k4,'d', 'markersize',4,...
     'MarkerFaceColor',Colord(2,:));
+
 % plot(real(k1)/k1 , imag(k1)/k1, 'd', 'markersize',4,...
 %     'MarkerFaceColor',Colord(4,:));
 % plot(real(k3)/k1 , imag(k3)/k1, 'd', 'markersize',4,...

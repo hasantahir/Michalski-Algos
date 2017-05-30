@@ -1,33 +1,40 @@
-clear; clc
+clear; clc;tic
 %  ---- Here we declare the namelist /INPUT/ that defines the search parameters.
-%  
+%
 %       It is useful to remember that
-%  
-%  
+%
+%
 %          point(1)  defines the REAL value of the lower left hand co-ordinate
 %                    of the rectangle
-%  
+%
 %          point(2)  defines the IMAGINARY value of the lower left hand co-ordinate
 %                    of the rectangle
-%  
+%
 %          step(1)   defines the length of the rectangle on the REAL axis.
-%  
+%
 %          step(2)   defines the length of the  rectangle on the IMAGINARY axis
-%  
+%
 %          droot_converged  We declare that a root has been found whenever
 %                           ABS(f(z)) < droot_converged
-%  
+%
 %          npts      Number of points in per side of rectangle in the fixed
 %                    integration quadrature
-%  
-%  
-% f = 1e12;
-% omega = 2*pi*f;
-% lambda = 3e8/f;
+%
+%
+f = 1e12;
+% f = 50e9;
+omega = 2*pi*f;
+lambda = 3e8/f;
+
+
+%% PEC Example
+% 
 % % Material Properties
-% ep1 = 1; % Air
-% ep2 = 9.7 ; % GaN/AlGaN layers combined
-% ep3 = 11; % Silicon base
+% ep1 = 12;
+% ep2 = 4 ;
+% ep3 = 2.1;
+% ep4 = 1;
+% 
 % 
 % % EM constants
 % mu0 = 4*pi*1e-7;
@@ -37,20 +44,14 @@ clear; clc
 % k1 = omega*sqrt(mu0*ep0*ep1);
 % k2 = omega*sqrt(mu0*ep0*ep2);
 % k3 = omega*sqrt(mu0*ep0*ep3);
+% k4 = omega*sqrt(mu0*ep0*ep4);
 
-%% Example From Chinese paper
-f = 50e9;
-omega = 2*pi*f;
-lambda = 3e8/f;
-num = 5e2; %Size of the arrays
-
-% Example Validations
+%% Open Dielectric
 
 % Material Properties
-ep1 = 12; 
-ep2 = 4 ; 
-ep3 = 2.1;
-ep4 = 1;
+ep1 = 1; % Air
+ep2 = 9.7 ; % GaN/AlGaN layers combined
+ep3 = 11; % Silicon base
 
 
 % EM constants
@@ -61,15 +62,34 @@ ep0 = 8.854e-12;
 k1 = omega*sqrt(mu0*ep0*ep1);
 k2 = omega*sqrt(mu0*ep0*ep2);
 k3 = omega*sqrt(mu0*ep0*ep3);
-k4 = omega*sqrt(mu0*ep0*ep4);
+
+% point = -.20 -.20i;
+% step = .40 + .40i;
+
+% % For Dellnitz function with A B C T
+% point = .95*k_air -.05*k_air*1i;
+% % point = 0;
+% step = .25*k_air + .12*k_air*1i;
+
+%% Test Case 1
+% point = -2.2 - 1i*3.5;
+% step = 2.5 + 1i*8;
+
+%% Gold-film example
+% point = 1.9 - 1i*1.5;
+% step = 0.4 + 1i*.20;
+
+%% Wilkinson Polynomial
+% point = 5.5 - 1i*.5;
+% step = 1.0 + 1i*1;
+
+
+%% TLGF
+point = 1.2*k1 - 1.2i*k1;
+step = 1.04*k1 + 2.04i*k1;
 
 % point = -20.3 -20.7i;
 % step = 40.6 + 41.4i;
-
-point = k4 - k4*.1i;
-step = 3.5*k4 + k4*.1i;
-maxroots = 20;
-droot_converged = 1e-9;
 
 % Import from Namelist
 % point  = -2.2 - 3.5*1i;
@@ -77,151 +97,135 @@ droot_converged = 1e-9;
 
 % point = -5 -5i;
 % step = 10 + 10i;
-% droot_converged = 1.0d-1;
-zaitken = true;
-zadaptive = false;
-npts = 1024;
+%----------------------------------------------------------------------
+%% Code paramters
+%----------------------------------------------------------------------
+
+% Convergence Criterion
+droot_converged = 1e-13;
+
+% Number of points on each side of the contour
+% Increase it to ensure capturing all Riemann sheets
+npts = 32768*2;
+
+% Currently not used as splitting algorithm not implemented
 maxboxes = 500;
+
+% Limit the number of roots per box
+% If this is greater, split
 max_roots_per_box = 5;
-% 
+
+% Maxium roots to be found by the routine
+maxroots = 500;
+%
 % point = -20.3 -20.7i;
 % step = 40.6 + 41.4i;
 
 % point = -k2 - k2*1i;
 % step = 2*k2 + k2*2i;
-%  
+%
 %  ----------------------------------------------------------------------
-%  
+%
 %       BOX SPLITTING FOR THIS INPUT DOMAIN
-%  
+%
 %  ----------------------------------------------------------------------
-%  
+%
 %  ---- For multiple input sets, we'd bettwe deallocate any previously
 %       allocated dynamic arrays for the box splitting.
-%  
-%  
+%
+%
 %  ---- Initializes all boxes to have -1 roots. We use this as flag
 %       later; remember that the splitting may produce some sub-boxes
 %       with zero roots and that soem of the allocated space may not
 %       even be used.
-%  
+%
 % nroots = -1*ones(1, maxboxes);
-%  
+%
 %  ---- Now do the work of splitting the contour
-%  
+%
 % call  split_contour(point,step,&
 %                     max_roots_per_box,points,steps,nrootsy,&
 %                     maxboxes,'TRUE')
-%  
+%
 % [points, step, nroots] = split_contour(point,step,max_roots_per_box,points,step,nroots, maxboxes,npts);
 % [points, step, nroots, maxboxes,npts] =  split_contour(point,step,max_roots_per_box, npts);
 % for ibox = 1 : maxboxes
 %     if nrootsy <= 0
 %         continue;
 %     end
-    %  
-    %  ----------------------------------------------------------------------
-    %  
-    %       Step 1:  ROOT COUNTING and CONTOUR INTEGRALS
-    %  
-    %  ----------------------------------------------------------------------
-    %  
-    %  ---- Count the number of roots within the rectangle now by examination
-    %       of the change in the argument and also compute the integrals "s",
-    %       defined in the paper, need to construct the matrix eigenvalue
-    %       problem.
-    %  
-    %       The integrals will becomputed wither using fixed point quadrature
-    %       or by using an adaptive Gauus-Kronod scheme from QUADPACK.
-    %  
-    % call countz(points(1,ibox), steps(1,ibox), zadaptive, npts, maxroots, nroots, s)
-    [nroots, s] = countz (point, step, npts, maxroots);
-    %  
-    %  ---- We'd better be careful that "nroots" does not
-    %       exceed "maxroots".
-    %  
-    %       Also, we'd better check that actually have
-    %       some roots to find.
-    %  
-    %  
-    %  ---- Ok, so now we initialize the allocated space
-    %  
-    k = [1, nroots];
-    l = [1, 8*nroots];
-    zfinal_roots  =  zeros(k);
-    zfinal_func  =  zeros(k);
-%     radii         =  zeros(k);
-%     indexv        =  zeros(k);
-    vl1 = zeros(k(2)); % k by k array
-    vr1 = zeros(k(2)); % k by k array
-    work = zeros(l);
-    rwork = zeros(l);
-    %  
-    %  ----------------------------------------------------------------------
-    %  
-    %       Step 2:  GENERALIZED EIGENVALUE PROBLEM
-    %  
-    %  ----------------------------------------------------------------------
-    %  
-    %  ---- Now build the matrices HMAT1 and HMAT as defined in the
-    %       theory. The roots will be the eigenvalues, "lambda", of
-    %       the system
-    %  
-    %           HMAT1 - lambda*HMAT
-    %  
-    for k = 1 : nroots
-        for l = 1 : nroots
-            H1(k,l) = s(k + l);
-            H(k,l) = s(k + l - 1 );
-        end
+%
+%----------------------------------------------------------------------
+%% ROOT COUNTING and CONTOUR INTEGRALS
+%----------------------------------------------------------------------
+% Count the number of roots within the rectangle now by examination
+% of the change in the argument and also compute the integrals "s",
+% defined in the paper, need to construct the matrix eigenvalue
+% problem.
+%
+% The contour integral is computed through MATLAB's integral function
+% using way-points to define the path of integration
+
+[nroots, s] = countz (point, step, npts, maxroots);
+
+
+%----------------------------------------------------------------------
+%% BUILD HANKEL MATRICES
+%----------------------------------------------------------------------
+%
+% Construct H and H1 from the computed contour integrals s_n
+%
+
+for k = 1 : nroots
+    for l = 1 : nroots
+        H1(k,l) = s(k + l);
+        H(k,l) = s(k + l - 1 );
     end
-    
-    
-    % Solve Eigenvalue problem
+end
+
+%----------------------------------------------------------------------
+%% SOLVE EIGENVALUE PROBLEM
+%----------------------------------------------------------------------
+% The eigenvalue problem looks like
+%
+% H - \lambda \time H1 = 0
+%
+% The eigenvalues, \lambda are the initial roots of the system
+%
+zinitial_roots = eig(H1,H,'qz');
+%
+% Check the quality of initial roots
+%
+zinitial_func = FZ(zinitial_roots);
+%
+%% USE NEWTON / HALLEY'S METHOD TO REFINE THE ROOTS
+
+qpl = point;
+%
+qpt = point + step;
+%
+% Check if we have a converged solution at this stage
+% for each root. If not, apply Newton's / Halley's method
+%
+for k = 1 : nroots
     %
-    zinitial_roots = eig(H1,H, 'qz');
-    %  
-    %  ---- Solve the generalized eigenvalue problem using the LaPack routine
-    zinitial_func = FZ(zinitial_roots);
-    %  
-    %  ----------------------------------------------------------------------
-    %  
-    %       Step 3:  ITERATE ROOTS USING HALLEY'S METHOD
-    %  
-    %  ----------------------------------------------------------------------
-    %  
-    %  ---- Prepare the co-ordinates of the rectangle in complex form
-    %  
-    qpl = point;
-    %  
-    qpt = point + step;
-    %  
-    %  ---- Ok, so let's see if we have a converged solution at this stage
-    %       for each root. If not, apply Halley's method
-    %  
-    for k = 1 : nroots
-        if(abs(zinitial_func(k)) < droot_converged)
-            
-            zfinal_roots(k) = zinitial_roots(k);
-            zfinal_func(k)  = zinitial_func(k);
-        else
-            zfinal_roots(k) = halley3(qpl, qpt, zinitial_roots(k), droot_converged,zaitken);
-            %  
-            %  ......... Compute the value of the function at the converged root.
-            %  
-            zfinal_func(k) = FZ(zfinal_roots(k));
-        end
+    % If initially obtained roots are good enough
+    %
+    if(abs(zinitial_func(k)) < droot_converged)
+        
+        zfinal_roots(k) = zinitial_roots(k);
+        zfinal_func(k)  = zinitial_func(k);
+        %
+        % Otherwise call Halley's method
+        %
+    else
+        
+        zfinal_roots(k) = newtzero(@FZ, zinitial_roots(k));
+        %
+        % Compute the value of the function at the converged root.
+        %
+        zfinal_func(k) = FZ(zfinal_roots(k));
     end
-    %  
-    %  ----------------------------------------------------------------------
-    %  
-    %       Step 4:  PREPARE FINAL RESULTS
-    %  
-    %  ----------------------------------------------------------------------
-    %  
-    %  ---- Compute an index such that the compted roots will be ordered
-    %       in terms of increasing magnitudes (i.e radius from origin).
-    %  
-    radii = abs(zfinal_roots);
-    indexv = indexx(nroots,radii);
-% end
+end
+zfinal_func = zfinal_func';
+zfinal_roots = zfinal_roots';
+toc

@@ -1,4 +1,4 @@
-function [points, Steps, nroots, maxboxes,npts] =  split_contour(point,Step,maxroot, npts)
+function [points, steps, nroots, maxboxes,npts] =  split_contour(point,step,maxroot, npts)
 % !***********************************************************************
 % !
 % !     Given the initial defintion of the rectangular contour, in
@@ -27,6 +27,7 @@ vsmall = 1e-06;
 minus1 = -1;
 izero = 0;
 ione = 1;
+s = zeros(1,maxroot*2+1);
 
 % !---- We start by copying the whole contour to the start of the
 % !     list of boxes
@@ -34,13 +35,9 @@ ione = 1;
 % !     "nlimit" is a counter that defines the high water marker
 % !     for the list of boxes used.
 % !
-points(1) = point(1);
-points(2) = point(2);
-Steps(1)  = Step(1);
-Steps(2)  = Step(2);
-nroots(1)   = minus1;
-points
-Steps
+points = point;
+steps  = step;
+nroots  = minus1;
 % !
 nlimit = 1;
 % !
@@ -93,7 +90,7 @@ zadaptive = false;
 % !
 % Call countz
 % [nroots(1), s] = countz (points(1,1), Steps(1,1), 'FALSE', npts, maxroot);
-[nroots(1), s] = countz (points, Steps, false, npts, maxroot);
+[nroots, s] = countz (points, steps, npts, maxroot);
 % !
 zdone = nroots(1) < maxroot;
 % !

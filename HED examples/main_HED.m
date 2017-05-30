@@ -20,10 +20,32 @@ ep0 = 8.854e-12;
 k1 = omega*sqrt(mu0*ep0*ep1);
 k2 = omega*sqrt(mu0*ep0*ep2);
 
+% STO 
+% f = 2.8e12;
+% omega = 2*pi*f;
+% ep1 = 1;
+% ep2 = -90 + 1i*577;
+% mu0 = 4*pi*1e-7;
+% ep0 = 8.854e-12;
+% 
+% k1 = omega*sqrt(mu0*ep0*ep1);
+% k2 = omega*sqrt(mu0*ep0*ep2);
+
+% % GaAs
+% f = 8.4e12;
+% omega = 2*pi*f;
+% ep1 = 1;
+% ep2 = -12.5 + 1i*3.2;
+% mu0 = 4*pi*1e-7;
+% ep0 = 8.854e-12;
+% 
+% k1 = omega*sqrt(mu0*ep0*ep1);
+% k2 = omega*sqrt(mu0*ep0*ep2);
+
 load besselzeros.mat First_15_zeros_J0 First_15_zeros_J1
 
 a = 2*k1; % Set breakpoint
-p = linspace(1e-3/k1,1e1/k1, num); % Define distance array
+p = linspace(1e-3/k1,1e3/k1, num); % Define distance array
 
 % TE case
 % nu = 0;
@@ -48,18 +70,18 @@ for i = 1 : length(p)
     % Avoid branch points
     if nu == 0 % TE case
         
-        h = 1;
+        h = 1.5;
         val_1(i) = TanhSinhQuad(0, k1 + .001i, tol); % Integrate upto k through DE
-        h = 1;
+        h = 1.5;
         val_2(i) = TanhSinhQuad(k1 + .001i, a, tol); % Integrate k upto a through DE
-        h = 1;
+        h = 1.5;
         val_3(i) = PE_Levin(a, tol, q); % Tail through PE Levin with Lucas
     else
-        h = 1;
+        h = 1.5;
         val_1(i) = TanhSinhQuad(.001i, k1, tol); % Integrate upto k through DE
-        h = 1;
+        h = 1.5;
         val_2(i) = TanhSinhQuad(k1, a, tol); % Integrate k upto a through DE
-        h = 1;
+        h = 1.5;
         val_3(i) = PE_Levin(a, tol, q); % Tail through PE Levin with Lucas
     end
     
@@ -73,6 +95,8 @@ figure (1)
 N = 3; % Number of colors to be used
 % Use Brewer-map color scheme
 axes('ColorOrder',brewermap(N,'Set1'),'NextPlot','replacechildren')
+Colord = get(gca, 'ColorOrder');
+
 h1 = loglog(p*k1, abs(val_1/k1), 'linewidth',1.3);
 hold on
 h2 = loglog(p*k1, abs(val_2/k1), 'linewidth',1.3);
@@ -99,23 +123,28 @@ figure (2)
 N = 2; % Number of colors to be used
 % Use Brewer-map color scheme
 axes('ColorOrder',brewermap(N,'Set1'),'NextPlot','replacechildren')
-h4 = loglog(p*k1, abs(val_3/k1), 'linewidth',1.3);
+h4 = loglog(p*k1, abs(val_3/k1), 'linewidth',1.4);
 hold on
-loglog(p*k1, abs(val_3/k1), 's', 'markersize',4);
-xlabel('$k_1\rho$','interpreter','latex')
-ylabel('$I(z, \rho, \tau)$','interpreter','latex')
-
+loglog(p*k1, abs(val_3/k1), 's', 'markersize',2,...
+    'color','black',...
+   'MarkerFaceColor',Colord(1,:));
+xlabel('$k_0\rho$','interpreter','latex')
+ylabel('$|E_x|$','interpreter','latex')
+set(gcf,'Color','white');
+set(gca,'FontName','times new roman','FontSize',15);
+set(gca,'FontName','times new roman','FontSize',15,'YScale', 'log','XScale', 'log') % Set axes fonts to Times New Roman
 box on
 set(gcf,'color','white');
 hold off
-cleanfigure();
-if nu == 0
-    title('TE case');
-    matlab2tikz('filename',sprintf('figures/TE_tail.tex'),'showInfo', false)
-else
-    title('TM case');
-    matlab2tikz('filename',sprintf('figures/TM_tail.tex'),'showInfo', false)
-end
+xlim([1e-3 1e3])
+% cleanfigure();
+% if nu == 0
+%     title('TE case');
+%     matlab2tikz('filename',sprintf('figures/TE_tail.tex'),'showInfo', false)
+% else
+%     title('TM case');
+%     matlab2tikz('filename',sprintf('figures/TM_tail.tex'),'showInfo', false)
+% end
 
 
 

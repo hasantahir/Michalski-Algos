@@ -48,4 +48,4 @@ set(gca,...
 hold off
 ylim([1 3.5])
 grid on;grid minor
-matlab2tikz('filename',sprintf('figures/TM_pole_frequency_sweep_HEMT.tex'),'showInfo', false);
+% matlab2tikz('filename',sprintf('figures/TM_pole_frequency_sweep_HEMT.tex'),'showInfo', false);

@@ -9,7 +9,7 @@
 %      Sommerfeld integral tails – methods and algorithms, Journal of Electromagnetic Waves and
 %      Applications, 30:3, 281-317
 
-
+clear all
 % Define limits
 a = 0;
 b =1;

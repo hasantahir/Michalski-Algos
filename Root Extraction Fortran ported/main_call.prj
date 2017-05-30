@@ -1,0 +1,75 @@
+<deployment-project plugin="plugin.apptool" plugin-version="1.0">
+  <configuration build-checksum="4073087742" file="D:\Users\MATLAB\RESEARCH\Michalski Algos\Root Extraction Fortran ported\main_call.prj" location="D:\Users\MATLAB\RESEARCH\Michalski Algos\Root Extraction Fortran ported" name="main_call" target="target.mlapps" target-name="Package App">
+    <param.appname>main_call</param.appname>
+    <param.authnamewatermark>Hasan Tahir Abbas</param.authnamewatermark>
+    <param.email>hasantahir@tamu.edu</param.email>
+    <param.company>Texas A&amp;M University</param.company>
+    <param.icon />
+    <param.icons />
+    <param.summary />
+    <param.description />
+    <param.screenshot />
+    <param.version>1.0</param.version>
+    <param.products.name />
+    <param.products.id />
+    <param.products.version />
+    <param.platforms />
+    <param.output>D:\Users\MATLAB\RESEARCH\Michalski Algos\Root Extraction Fortran ported</param.output>
+    <param.guid>b2be7a10-e89e-46f0-88ed-c3ccb3645c90</param.guid>
+    <unset>
+      <param.authnamewatermark />
+      <param.email />
+      <param.company />
+      <param.icon />
+      <param.icons />
+      <param.summary />
+      <param.description />
+      <param.screenshot />
+      <param.version />
+      <param.products.name />
+      <param.products.id />
+      <param.products.version />
+      <param.platforms />
+      <param.output />
+    </unset>
+    <fileset.main>
+      <file>${PROJECT_ROOT}\main_call.m</file>
+    </fileset.main>
+    <fileset.depfun>
+      <file>${PROJECT_ROOT}\countz.m</file>
+      <file>${PROJECT_ROOT}\dFZ.m</file>
+      <file>${PROJECT_ROOT}\dispersion_function.m</file>
+      <file>${PROJECT_ROOT}\FZ.m</file>
+      <file>${PROJECT_ROOT}\insidebox.m</file>
+      <file>${PROJECT_ROOT}\myfun.m</file>
+      <file>${PROJECT_ROOT}\newtzero.m</file>
+      <file>${PROJECT_ROOT}\TLGF.m</file>
+      <file>${PROJECT_ROOT}\TLGFd.m</file>
+    </fileset.depfun>
+    <fileset.resources />
+    <fileset.package />
+    <build-deliverables>
+      <file location="D:\Users\MATLAB\RESEARCH\Michalski Algos" name="Root Extraction Fortran ported" optional="false">D:\Users\MATLAB\RESEARCH\Michalski Algos\Root Extraction Fortran ported</file>
+    </build-deliverables>
+    <workflow />
+    <matlab>
+      <root>C:\Program Files\MATLAB\R2016a</root>
+      <toolboxes />
+    </matlab>
+    <platform>
+      <unix>false</unix>
+      <mac>false</mac>
+      <windows>true</windows>
+      <win2k>false</win2k>
+      <winxp>false</winxp>
+      <vista>false</vista>
+      <linux>false</linux>
+      <solaris>false</solaris>
+      <osver>6.2</osver>
+      <os32>false</os32>
+      <os64>true</os64>
+      <arch>win64</arch>
+      <matlab>true</matlab>
+    </platform>
+  </configuration>
+</deployment-project>

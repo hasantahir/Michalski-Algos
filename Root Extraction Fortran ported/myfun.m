@@ -1,4 +1,9 @@
-function y = myfun(x) 
+function y = myfun(z) 
 global pow
-y = x.^(pow - 1)./FZ(x); 
-end
+f = FZ(z);
+% dd = df;
+df = dFZ(z);
+
+% save d.mat df dd
+y = z.^(pow - 1).*df./f;%/FZ(z); 
+end  

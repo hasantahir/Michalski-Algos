@@ -3,7 +3,7 @@ function val = PE_Levin(a, tol, q)
 % q optimally should be pi/rho.
 %% Initialize
 global nu
-kmax = 71;
+kmax = 11;
 X = zeros(1, kmax + 2);
 A = zeros(1, kmax + 1);
 B = zeros(1, kmax + 1);

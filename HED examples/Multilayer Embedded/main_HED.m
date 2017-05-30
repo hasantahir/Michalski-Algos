@@ -60,13 +60,13 @@ for i = 1 : length(p)
 
     % Avoid branch points
     %     if nu == 0 % TE case
-    maxlev = 15;
+    maxlev = 6;
     h = 1;
     val_1(i) = TanhSinhQuad(0, k3 + .0001i, tol); % Integrate upto k through DE
     h = 1;
     val_2(i) = TanhSinhQuad(k3 + .0001i, a, tol); % Integrate k upto a through DE
     h = 1;
-    maxlev = 15;
+    maxlev = 6;
     val_3(i) = PE_Levin(a, tol, q(i)); % Tail through PE Levin with Lucas
     %     else
     %         h = 1;
@@ -113,14 +113,14 @@ set(gca,...
     'FontName','times new roman',...
     'FontSize',12);
 hold off
-cleanfigure();
-if nu == 0
-    title('TE case');
-    matlab2tikz('filename',sprintf('figures/TE_contribution.tex'),'showInfo', false)
-else
-    title('TM case');
-    matlab2tikz('filename',sprintf('figures/TM_contribution.tex'),'showInfo', false)
-end
+% cleanfigure();
+% if nu == 0
+%     title('TE case');
+%     matlab2tikz('filename',sprintf('figures/TE_contribution.tex'),'showInfo', false)
+% else
+%     title('TM case');
+%     matlab2tikz('filename',sprintf('figures/TM_contribution.tex'),'showInfo', false)
+% end
 
 
 
@@ -144,14 +144,14 @@ set(gca,...
     'FontName','times new roman',...
     'FontSize',12);
 hold off
-cleanfigure();
-if nu == 0
-    title('TE case');
-    matlab2tikz('filename',sprintf('figures/TE_tail.tex'),'showInfo', false)
-else
-    title('TM case');
-    matlab2tikz('filename',sprintf('figures/TM_tail.tex'),'showInfo', false)
-end
+% cleanfigure();
+% if nu == 0
+%     title('TE case');
+%     matlab2tikz('filename',sprintf('figures/TE_tail.tex'),'showInfo', false)
+% else
+%     title('TM case');
+%     matlab2tikz('filename',sprintf('figures/TM_tail.tex'),'showInfo', false)
+% end
 
 
 
@@ -183,11 +183,11 @@ set(gca,...
     'FontSize',12);
 hold off
 toc
-cleanfigure();
-if nu == 0
-    title('TE case');
-    matlab2tikz('filename',sprintf('figures/TE.tex'),'showInfo', false)
-else
-    title('TM case');
-    matlab2tikz('filename',sprintf('figures/TM.tex'),'showInfo', false)
-end
+% cleanfigure();
+% if nu == 0
+%     title('TE case');
+%     matlab2tikz('filename',sprintf('figures/TE.tex'),'showInfo', false)
+% else
+%     title('TM case');
+%     matlab2tikz('filename',sprintf('figures/TM.tex'),'showInfo', false)
+% end

@@ -4,7 +4,7 @@ function old = TanhSinhQuad(a, b, tol)
 % Parameters
 eta = 1;
 kappa = 1e-15;
-nmax = 193;
+nmax = 24;
 maxlev = 5;
 
 

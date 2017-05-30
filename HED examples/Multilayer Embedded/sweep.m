@@ -2,7 +2,7 @@ function roots = sweep(f)
 
 omega = 2*pi*f;
 lambda = 3e8/f;
-num = 50; %Size of the arrays
+num = 15; %Size of the arrays
 tol = 1e-8;
 % Example Validations
 
@@ -42,16 +42,16 @@ d1 = z2 - z1;
 d2 = z3 - z2;
 d3 = z4 - z3;
 
-% TE/TM switch
-nu = 0;
+% % TE/TM switch
+nu = 1;
 
-kz1 = @(kp) sqrt(k1 ^2 - kp .^2);
+kz1 = @(kp) sqrt(k1 ^2 - k4 ^2  - kp .^2);
 
-kz2 = @(kp) sqrt(k2 ^2 - kp .^2);
+kz2 = @(kp) sqrt(k2 ^2 - k4 ^2  - kp .^2);
 
-kz3 = @(kp) sqrt(k3 ^2 - kp .^2);
+kz3 = @(kp) sqrt(k3 ^2 - k4 ^2  - kp .^2);
 
-kz4 = @(kp) sqrt(k4 ^2 - kp .^2);
+kz4 = @(kp) sqrtbr(k4 ^2 - k4 ^2 - kp .^2);
 
 % Define impedances
 if nu == 0
@@ -63,10 +63,10 @@ if nu == 0
     Z4 = @(kp) omega./kz4(kp);
 else
     % TM case
-    Z1 = @(kp) kz1(kp)./(omega*ep1);
-    Z2 = @(kp) kz2(kp)./(omega*ep2);
-    Z3 = @(kp) kz3(kp)./(omega*ep3);
-    Z4 = @(kp) kz4(kp)./(omega*ep4);
+    Z1 = @(kp) kz1(kp)./(omega*ep1*ep0);
+    Z2 = @(kp) kz2(kp)./(omega*ep2*ep0);
+    Z3 = @(kp) kz3(kp)./(omega*ep3*ep0);
+    Z4 = @(kp) kz4(kp)./(omega*ep4*ep0);
 end
 
 
@@ -92,7 +92,7 @@ B = @(kp) (Gamma_right(kp) .* exp(-1i*kz2(kp)*2*z3))./(1 - Gamma_left(kp).*Gamma
 % Denominator
 D = @(kp) 1 - Gamma_left(kp).*Gamma_right(kp).*exp(-2i * kz2(kp) * dpp).*exp(-2i * kz2(kp) * dp);
 
-lxlim = k4;
+lxlim = 1*k4;
 uxlim = 3.5*k4;
 
 
@@ -191,20 +191,20 @@ end
 % Sort the array
 root = sort(root);
 % Clean up roots by weeding out too close values
-if ~isempty(root)
-    cnt = 1;  % Counter for while loop.
-    
-    while ~isempty(root)
-        vct = abs(root - root(1)) < 5e-6; % Minimum spacing between roots.
-        C = root(vct);  % C has roots grouped close together.
-        [idx,idx] = min(abs(D(C)));  % Pick the best root per group.
-        rt(cnt) = C(idx); %  Most root vectors are small.
-        root(vct) = []; % Deplete the pool of roots.
-        cnt = cnt + 1;  % Increment the counter.
-    end
-    root = sort(rt).';  % return a nice, sorted column vector
-end
-roots = root((real(root))>k4 & abs(imag(root))<tol);
+% if ~isempty(root)
+%     cnt = 1;  % Counter for while loop.
+%     
+%     while ~isempty(root)
+%         vct = abs(root - root(1)) < 5e-6; % Minimum spacing between roots.
+%         C = root(vct);  % C has roots grouped close together.
+%         [idx,idx] = min(abs(D(C)));  % Pick the best root per group.
+%         rt(cnt) = C(idx); %  Most root vectors are small.
+%         root(vct) = []; % Deplete the pool of roots.
+%         cnt = cnt + 1;  % Increment the counter.
+%     end
+%     root = sort(rt).';  % return a nice, sorted column vector
+% end
+roots = root((real(root))>k4);% & abs(imag(root))<tol);
 roots = roots/k4;
 if ~isempty(roots)
     cnt = 1;  % Counter for while loop.

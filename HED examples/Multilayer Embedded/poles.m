@@ -3,16 +3,29 @@ clear;close all;tic
 f = 1e12;
 omega = 2*pi*f;
 lambda = 3e8/f;
-num = 500; %Size of the arrays
+num = 100; %Size of the arrays
 
 % Example Validations
 
 % Material Properties
 ep1 = 1; % Air
 ep2 = 9.7 ; % GaN/AlGaN layers combined
-ep3 = 11; % Silicon base
-% backed by a PEC layer
+ep3 = 1; % Silicon base
+% % backed by a PEC layer
 
+%% MIM Example
+lambda = 1550e-9;
+c = 3e8;
+omega = 2*pi*c/lambda;
+ep1 = -143.497;
+ep2 = 1;
+ep3 = -143.497;
+d = lambda/4; 
+
+% Chinese Homotopy Method
+% ep1 = 1; % Air
+% ep2 = 9.7 ; % GaN/AlGaN layers combined
+% ep3 = 1; % Silicon base
 % EM constants
 mu0 = 4*pi*1e-7;
 ep0 = 8.854e-12;
@@ -24,7 +37,7 @@ k3 = omega*sqrt(mu0*ep0*ep3);
 
 
 % Middle Layer thickness
-d = 1.0*lambda;
+% d = 2.4*lambda;
 
 % Source Location
 zp = -d/2;
@@ -37,25 +50,32 @@ z_pec = -5*d;
 % TE/TM switch
 nu = 1;
 
-kz1 = @(kp) sqrt(k1 ^2 - kp .^2);
+kz1 = @(kp) conj(sqrt(k1 ^2 - k1^2 - kp .^2));
 
-kz2 = @(kp) sqrt(k2 ^2 - kp .^2);
+kz2 = @(kp) (sqrt(k2 ^2 - k1^2 - kp .^2));
 
-kz3 = @(kp) sqrt(k3 ^2 - kp .^2);
+kz3 = @(kp) (sqrt(k3 ^2 - k1^2- kp .^2));
 
 % Define impedances
 if nu == 0
     
     % TE Case
-    Z1 = @(kp) omega./kz1(kp);
-    Z2 = @(kp) omega./kz2(kp);
-    Z3 = @(kp) omega./kz3(kp);
+    Z1 = @(kp) mu0*omega./kz1(kp);
+    Z2 = @(kp) mu0*omega./kz2(kp);
+    Z3 = @(kp) mu0*omega./kz3(kp);
 else
     % TM case
     Z1 = @(kp) kz1(kp)./(omega*ep1);
     Z2 = @(kp) kz2(kp)./(omega*ep2);
     Z3 = @(kp) kz3(kp)./(omega*ep3);
 end
+
+% Normalize Impedances to free-space
+% Z0 = sqrt(mu0/ep0);
+% Z1 = @(kp) Z1(kp)/Z0;
+% Z2 = @(kp) Z2(kp)/Z0;
+% Z3 = @(kp) Z3(kp)/Z0;
+
 % Gammas
 Gamma_32 = @(kp)(Z3(kp) - Z2(kp))./ (Z3(kp) + Z2(kp));
 Gamma_43 =  -1;
@@ -72,10 +92,10 @@ Gamma_43 =  -1;
 % Gamma_left = @(kp) (Z_in_left(kp) - Z2(kp)) ./ (Z_in_left(kp) + Z2(kp)); % Left-looking
 % Gamma_right = @(kp)  (Z_in_right(kp) - Z2(kp)) ./ (Z_in_right(kp) + Z2(kp)); % Right-looking
 
-% % Reflection Coefficients
-% Gamma_left = @(kp)(Z3(kp) - Z2(kp)) ./ (Z3(kp) + Z2(kp)); % Left-looking
-Gamma_left = @(kp)(Gamma_32(kp) + (-1)*exp(-1i*kz3(kp)*4*d))...
-    ./(1 + Gamma_32(kp).*(-1).*exp(-1i*kz3(kp)*4*d)); % Left-looking
+%% Reflection Coefficients
+Gamma_left = @(kp)(Z3(kp) - Z2(kp)) ./ (Z3(kp) + Z2(kp)); % Left-looking
+% Gamma_left = @(kp)(Gamma_32(kp) + (-1)*exp(-1i*kz3(kp)*4*d))...
+%     ./(1 + Gamma_32(kp).*(-1).*exp(-1i*kz3(kp)*4*d)); % Left-looking
 Gamma_right = @(kp) (Z1(kp) - Z2(kp)) ./ (Z1(kp) + Z2(kp)); % Right-looking
 
 % Unknown A
@@ -87,32 +107,32 @@ B = @(kp) (Gamma_right(kp) .* exp(-1i*kz2(kp)*2*z1))./(1 - Gamma_left(kp).*Gamma
     .*( exp(+1i * kz2(kp) * zp) + Gamma_left(kp) .* exp( +1i * kz2(kp) * (2*z0 - zp)));
 
 % Denominator
-D = @(kp) 1 - Gamma_left(kp).*Gamma_right(kp).*exp(-2i * kz2(kp) * d);
+D = @(kp) (1 - Gamma_left(kp).*Gamma_right(kp).*exp(-2i * kz2(kp) * d));
 
-lxlim = k1*.5;
-uxlim = k3*2;
+lxlim = 0;
+uxlim = k1*22;
 p = linspace(lxlim,uxlim,num);
 root = [];
 for i = 1 : length(p)
-    r = newtzero(D,1i*p(i));
+    r = newtzero(D,p(i));
     root = vertcat(root,r);
 end
 % Sort the array
 root = sort(root);
 % Clean up roots by weeding out too close values
-if ~isempty(root)
-    cnt = 1;  % Counter for while loop.
-    
-    while ~isempty(root)
-        vct = abs(root - root(1)) < 1e-10; % Minimum spacing between roots.
-        C = root(vct);  % C has roots grouped close together.
-        [idx,idx] = min(abs(D(C)));  % Pick the best root per group.
-        rt(cnt) = C(idx); %  Most root vectors are small.
-        root(vct) = []; % Deplete the pool of roots.
-        cnt = cnt + 1;  % Increment the counter.
-    end
-    root = sort(rt).';  % return a nice, sorted column vector
-end
+% if ~isempty(root)
+%     cnt = 1;  % Counter for while loop.
+%     
+%     while ~isempty(root)
+%         vct = abs(root - root(1)) < 1e4; % Minimum spacing between roots.
+%         C = root(vct);  % C has roots grouped close together.
+%         [idx,idx] = min(abs(D(C)));  % Pick the best root per group.
+%         rt(cnt) = C(idx); %  Most root vectors are small.
+%         root(vct) = []; % Deplete the pool of roots.
+%         cnt = cnt + 1;  % Increment the counter.
+%     end
+%     root = sort(rt).';  % return a nice, sorted column vector
+% end
 
 
 %% Physical Roots
@@ -124,11 +144,13 @@ N = 5; % Number of colors to be used
 axes('ColorOrder',brewermap(N,'Set1'),'NextPlot','replacechildren')
 Colord = get(gca, 'ColorOrder');
 
-plot((real(root)/k1), (imag(root)/k1), 's', 'markersize',4,...
+plot((real(root)/k2), (imag(root)/k2), 's', 'markersize',4,...
     'MarkerFaceColor',Colord(1,:));
 hold on
-plot((real(k1)/k1) , (imag(k1)/k1), 'd', 'markersize',4,...
-    'MarkerFaceColor',Colord(2,:));
+% plot((real(k2)/k2) , (imag(k2)/k2), 'd', 'markersize',4,...
+%     'MarkerFaceColor',Colord(2,:));
+plot((real(k1)/k2) , (imag(k1)/k2), 'd', 'markersize',4,...
+    'MarkerFaceColor',Colord(3,:));
 % plot(real(k1)/k1 , imag(k1)/k1, 'd', 'markersize',4,...
 %     'MarkerFaceColor',Colord(4,:));
 % plot(real(k3)/k1 , imag(k3)/k1, 'd', 'markersize',4,...
@@ -139,11 +161,11 @@ xlabel('$\Re\textrm{k}_{\rho}$','interpreter','latex')
 ylabel('$\Im\textrm{k}_{\rho}$','interpreter','latex')
 legend('Poles','Branch Point',...
     'Location','southwest','Orientation','horizontal');
-if nu == 0
-    title(['TE Pole Locations for thickness d = ', num2str(d), 'm']);
-else
-    title(['TM Pole Locations for thickness d = ', num2str(d), 'm']);
-end
+% if nu == 0
+%     title(['TE Pole Locations for thickness d = ', num2str(d), 'm']);
+% else
+%     title(['TM Pole Locations for thickness d = ', num2str(d), 'm']);
+% end
 % Decorations
 
 box on
@@ -165,11 +187,11 @@ hold off
 
 % Save tikz figure
 % cleanfigure();
-if nu == 0
-    matlab2tikz('filename',sprintf('figures/TE_pole_loc_d_%d.tex',floor(d*1e7)),'showInfo', false);
-else
-    matlab2tikz('filename',sprintf('figures/TM_pole_loc_d_%d.tex',floor(d*1e7)),'showInfo', false);
-end
+% if nu == 0
+%     matlab2tikz('filename',sprintf('figures/TE_pole_loc_d_%d.tex',floor(d*1e7)),'showInfo', false);
+% else
+%     matlab2tikz('filename',sprintf('figures/TM_pole_loc_d_%d.tex',floor(d*1e7)),'showInfo', false);
+% end
 
 
 
@@ -209,11 +231,11 @@ hold off
 
 % Save tikz figure
 % cleanfigure();
-if nu == 0
-    matlab2tikz('filename',sprintf('figures/TE_pole_rel_loc_d_%d.tex',floor(d*1e7)),'showInfo', false)
-else
-    matlab2tikz('filename',sprintf('figures/TM_pole_rel_loc_d_%d.tex',floor(d*1e7)),'showInfo', false)
-end
+% if nu == 0
+%     matlab2tikz('filename',sprintf('figures/TE_pole_rel_loc_d_%d.tex',floor(d*1e7)),'showInfo', false)
+% else
+%     matlab2tikz('filename',sprintf('figures/TM_pole_rel_loc_d_%d.tex',floor(d*1e7)),'showInfo', false)
+% end
 
 %% Plot Pole Verification
 figure(3)
@@ -248,11 +270,11 @@ hold off
 
 % Save tikz figure
 % cleanfigure();
-if nu == 0
-    matlab2tikz('filename',sprintf('figures/TE_pole_discrepancy_with_nopec_d_%d.tex',floor(d*1e7)),'showInfo', false)
-else
-    matlab2tikz('filename',sprintf('figures/TM_pole_discrepancy_nopec_d_%d.tex',floor(d*1e7)),'showInfo', false)
-end
+% if nu == 0
+%     matlab2tikz('filename',sprintf('figures/TE_pole_discrepancy_with_nopec_d_%d.tex',floor(d*1e7)),'showInfo', false)
+% else
+%     matlab2tikz('filename',sprintf('figures/TM_pole_discrepancy_nopec_d_%d.tex',floor(d*1e7)),'showInfo', false)
+% end
 % End
 toc
 

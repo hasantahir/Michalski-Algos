@@ -35,9 +35,9 @@ end
 % from reference paper [1] eq. 80
 
 % For figure 7a
-% p = 0;
-% t = 1;
-% y = exp(-x*z(i))*besselj(0,p*x)*besselj(3/2,x*t);
+p = 0;
+t = 1;
+y = exp(-x*z(i))*besselj(0,p*x)*besselj(3/2,x*t);
 
 % <<<<<<< HEAD
 % %% Reuse this part in FindFirstZeros.m
@@ -60,22 +60,22 @@ end
 % =======
 %% Reuse this part in FindFirstZeros.m
 % For figure 7b
-t = 1;
-% Lucas Decomposition
-J_plus = 1/2*(besselj(0,p(i)*x)*besselj(3/2,x*t) - ...
-    bessely(0,p(i)*x)*bessely(3/2,x*t));
-J_minus = 1/2*(besselj(0,p(i)*x)*besselj(3/2,x*t) + ...
-    bessely(0,p(i)*x)*bessely(3/2,x*t));
-J = besselj(0,p(i)*x)*besselj(3/2,x*t);
-if l == 1
-    y = exp(-x*z)*J_plus*x^.5;
-elseif l == 2
-    y = exp(-x*z)*J_minus*x^.5;
-else
-    y = exp(-x*z)*J*x^.5;
-    
-end
-end
+% t = 1;
+% % Lucas Decomposition
+% J_plus = 1/2*(besselj(0,p(i)*x)*besselj(3/2,x*t) - ...
+%     bessely(0,p(i)*x)*bessely(3/2,x*t));
+% J_minus = 1/2*(besselj(0,p(i)*x)*besselj(3/2,x*t) + ...
+%     bessely(0,p(i)*x)*bessely(3/2,x*t));
+% J = besselj(0,p(i)*x)*besselj(3/2,x*t);
+% if l == 1
+%     y = exp(-x*z)*J_plus*x^.5;
+% elseif l == 2
+%     y = exp(-x*z)*J_minus*x^.5;
+% else
+%     y = exp(-x*z)*J*x^.5;
+%     
+% end
+% end
 % >>>>>>> master
 
 
@@ -99,13 +99,13 @@ end
 
 %% From reference [1], eq 78
 % I_0(3.247, 0, 7.5)
-z = 1;
-p = 7.5;
-a = 3.247;
-y = exp(-x*z)*besselj(0,x*p)*x^0;
+% z = 1;
+% p = 7.5;
+% a = 3.247;
+% y = exp(-x*z)*besselj(0,x*p)*x^0;
 % % y = @(x) exp(-x*z).*besselj(0,p*x).*x.^0;
 
-end
+% end
 % % Bessel Function reference
 % @article{lucas1995evaluating,
 %   title={Evaluating infinite integrals involving Bessel functions of arbitrary order},

@@ -9,7 +9,7 @@ global i % index number of the distance array
 global p % distance
 global a % Breakpoint location
 global maxlev
-f = 10e6;
+f = 1.1e12;
 c = 3e8;
 lambda = c/f;
 omega = 2*pi*f;
@@ -23,7 +23,7 @@ k1 = omega*sqrt(mu0*ep0*ep1);
 k2 = omega*sqrt(mu0*ep0*ep2);
 
 a = 2*k1; % Set breakpoint
-p = lambda * logspace(0,5, num); % Define distance array
+p = lambda * logspace(0,4, num); % Define distance array
 q = pi./p;
 % p = 1e3/lambda;
 val_1 = zeros(size(p));

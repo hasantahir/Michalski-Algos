@@ -14,9 +14,25 @@ kp = c + d;
 f = 10e9;
 omega = 2*pi*f;
 ep1 = 1;
-ep2 = 10 - 1i*18;
+ep2 = 3.7 + 1i*.0018;
+
+% STO 
+% f = 2.8e12;
+% omega = 2*pi*f;
+% ep1 = 1;
+% ep2 = -90 + 1i*577;
 mu0 = 4*pi*1e-7;
 ep0 = 8.854e-12;
+
+% GaAs
+% f = 8.4e12;
+% omega = 2*pi*f;
+% ep1 = 1;
+% ep2 = -12.5 + 1i*3.2;
+% mu0 = 4*pi*1e-7;
+% ep0 = 8.854e-12;
+
+
 k1 = omega*sqrt(mu0*ep0*ep1);
 k2 = omega*sqrt(mu0*ep0*ep2);
 
@@ -67,5 +83,7 @@ else
     
 end
 % y = 1/(2i*kz1) * besselj(nu, kp * p(i)) * kp/(2*pi);
+
+
 
 end
